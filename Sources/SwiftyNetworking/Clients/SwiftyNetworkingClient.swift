@@ -23,7 +23,7 @@ public actor SwiftyNetworkingClient {
         guard let underlyingResponse = underlyingResponse as? HTTPURLResponse else {
             throw URLError(.cannotParseResponse)
         }
-        let source = delegate.source(for: underlyingRequest)
-        return SwiftyNetworkingResponse(source: source, body: body, underlyingResponse: underlyingResponse)
+        let metrics = delegate.metrics(for: underlyingRequest)
+        return SwiftyNetworkingResponse(body: body, underlyingResponse: underlyingResponse, metrics: metrics)
     }
 }
