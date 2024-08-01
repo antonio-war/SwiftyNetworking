@@ -11,9 +11,9 @@ public struct SwiftyNetworkingResponse: Identifiable, Hashable, Sendable {
     public let id: UUID
     public let status: Int
     public let headers: [String: String]
-    public let body: Data?
+    public let body: Data
     
-    init(id: UUID = UUID(), body: Data? = nil, underlyingResponse: HTTPURLResponse) {
+    init(id: UUID = UUID(), body: Data, underlyingResponse: HTTPURLResponse) {
         self.id = id
         self.status = underlyingResponse.statusCode
         self.headers = underlyingResponse.allHeaderFields.reduce(into: [String: String]()) { result, header in
