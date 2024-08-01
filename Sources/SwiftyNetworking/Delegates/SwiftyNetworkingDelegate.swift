@@ -8,19 +8,19 @@
 import Foundation
 
 class SwiftyNetworkingDelegate: NSObject, URLSessionTaskDelegate {
-    private var sources: [URLRequest: URLSessionTaskTransactionMetrics] = [:]
+    private var metrics: [URLRequest: URLSessionTaskTransactionMetrics] = [:]
     
-    func metrics(for request: URLRequest) -> URLSessionTaskTransactionMetrics? {
-        guard let source = sources[request] else {
-            return nil
+    func source(for request: URLRequest) -> SwiftyNetworkingSource {
+        guard let metrics = metrics[request] else {
+            return .unknown
         }
-        sources[request] = nil
-        return source
+        self.metrics[request] = nil
+        return metrics.resourceFetchType
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
         for metrics in metrics.transactionMetrics {
-            self.sources[metrics.request] = metrics
+            self.metrics[metrics.request] = metrics
         }
     }
 }
