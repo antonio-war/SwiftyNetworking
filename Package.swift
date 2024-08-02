@@ -4,6 +4,10 @@ import PackageDescription
 
 let package = Package(
     name: "SwiftyNetworking",
+    platforms: [
+        .iOS(.v13),
+        .macOS(.v12),
+    ],
     products: [
         .library(
             name: "SwiftyNetworking",
