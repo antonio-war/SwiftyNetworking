@@ -48,3 +48,18 @@ Such as the classics method, headers and query parameters, but also some paramet
       cachePolicy: .reloadIgnoringCacheData
    )
 ```
+
+### Client creation
+Create a `SwiftyNetworkingClient` instance using the default or a custom URLSessionConfiguration.
+A single instance should be enough to manage the entire networking layer of the app, so hypothetically the client could be placed inside a dependency container.
+
+```swift
+   let networkingClient = SwiftyNetworkingClient()
+```
+
+### Request execution
+Execute the request using the defined async method.
+
+```swift
+   let response = try await networkingClient.send(request: request)
+```
