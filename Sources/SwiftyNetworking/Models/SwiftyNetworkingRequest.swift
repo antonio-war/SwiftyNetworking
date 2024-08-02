@@ -14,6 +14,7 @@ public struct SwiftyNetworkingRequest: Identifiable, Hashable, Sendable {
     public let method: SwiftyNetworkingMethod
     public let headers: [String: String]
     public let body: Data?
+    public let parameters: [String: String]
     public let cachePolicy: SwiftyNetworkingCachePolicy
     public let timeout: TimeInterval
     
@@ -24,6 +25,7 @@ public struct SwiftyNetworkingRequest: Identifiable, Hashable, Sendable {
         method: SwiftyNetworkingMethod = .get,
         headers: [String: String] = [:],
         body: Data? = nil,
+        parameters: [String: Any] = [:],
         cachePolicy: SwiftyNetworkingCachePolicy = .returnCacheDataElseLoad,
         timeout: TimeInterval = 60
     ) {
@@ -33,6 +35,9 @@ public struct SwiftyNetworkingRequest: Identifiable, Hashable, Sendable {
         self.method = method
         self.headers = headers
         self.body = body
+        self.parameters = parameters.reduce(into: [String: String]()) { result, parameter in
+            result[parameter.key] = String(describing: parameter.value)
+        }
         self.cachePolicy = cachePolicy
         self.timeout = timeout
     }
@@ -47,7 +52,19 @@ public struct SwiftyNetworkingRequest: Identifiable, Hashable, Sendable {
                 throw URLError(.badURL)
             }
             
-            guard let url = URL(string: path, relativeTo: endpoint) else {
+            guard let url = URL(string: path, relativeTo: endpoint), var components = URLComponents(string: url.absoluteString) else {
+                throw URLError(.badURL)
+            }
+            
+            guard !parameters.isEmpty else {
+                return url
+            }
+            
+            components.queryItems = parameters.map { (key, value) in
+                URLQueryItem(name: key, value: value)
+            }
+            
+            guard let url = components.url else {
                 throw URLError(.badURL)
             }
             

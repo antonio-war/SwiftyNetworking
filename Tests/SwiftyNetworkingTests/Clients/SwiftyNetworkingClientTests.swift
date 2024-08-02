@@ -31,7 +31,7 @@ final class SwiftyNetworkingClientTests: XCTestCase {
         XCTAssertEqual(response.status, 200)
         XCTAssertEqual(response.source, .network)
         XCTAssertFalse(response.body.isEmpty)
-        XCTAssertFalse(response.body.isEmpty)
+        XCTAssertFalse(response.headers.isEmpty)
     }
     
     func testSendGetRequest() async throws {
@@ -45,52 +45,25 @@ final class SwiftyNetworkingClientTests: XCTestCase {
         XCTAssertEqual(response.status, 200)
         XCTAssertEqual(response.source, .network)
         XCTAssertFalse(response.body.isEmpty)
-        XCTAssertFalse(response.body.isEmpty)
+        XCTAssertFalse(response.headers.isEmpty)
     }
     
-    func testSendPatchRequest() async throws {
+    func testSendGetRequestWhenParametersAreNotEmpty() async throws {
         let request = SwiftyNetworkingRequest(
-            endpoint: "https://httpbin.org",
-            path: "patch",
-            method: .patch,
+            endpoint: "https://jsonplaceholder.typicode.com",
+            path: "comments",
+            method: .get,
+            parameters: ["postId": 1],
             cachePolicy: .reloadIgnoringCacheData
         )
         let response = try await networkingClient.send(request: request)
         XCTAssertEqual(response.status, 200)
         XCTAssertEqual(response.source, .network)
         XCTAssertFalse(response.body.isEmpty)
-        XCTAssertFalse(response.body.isEmpty)
+        XCTAssertFalse(response.headers.isEmpty)
     }
     
-    func testSendPostRequest() async throws {
-        let request = SwiftyNetworkingRequest(
-            endpoint: "https://httpbin.org",
-            path: "post",
-            method: .post,
-            cachePolicy: .reloadIgnoringCacheData
-        )
-        let response = try await networkingClient.send(request: request)
-        XCTAssertEqual(response.status, 200)
-        XCTAssertEqual(response.source, .network)
-        XCTAssertFalse(response.body.isEmpty)
-        XCTAssertFalse(response.body.isEmpty)
-    }
-    
-    func testSendPutRequest() async throws {
-        let request = SwiftyNetworkingRequest(
-            endpoint: "https://httpbin.org",
-            path: "put",
-            method: .put,
-            cachePolicy: .reloadIgnoringCacheData
-        )
-        let response = try await networkingClient.send(request: request)
-        XCTAssertEqual(response.status, 200)
-        XCTAssertEqual(response.source, .network)
-        XCTAssertFalse(response.body.isEmpty)
-        XCTAssertFalse(response.body.isEmpty)
-    }
-    
-    func testSendGetRequestReturnsCachedResponseWhenNeeded() async throws {
+    func testSendGetRequestWhenCacheIsEnabled() async throws {
         let firstRequest = SwiftyNetworkingRequest(
             endpoint: "https://jsonplaceholder.typicode.com",
             path: "todos/1",
@@ -109,5 +82,47 @@ final class SwiftyNetworkingClientTests: XCTestCase {
         let secondResponse = try await networkingClient.send(request: secondRequest)
         XCTAssertEqual(secondResponse.source, .cache)
         XCTAssertLessThanOrEqual(secondResponse.duration, firstResponse.duration)
+    }
+    
+    func testSendPatchRequest() async throws {
+        let request = SwiftyNetworkingRequest(
+            endpoint: "https://httpbin.org",
+            path: "patch",
+            method: .patch,
+            cachePolicy: .reloadIgnoringCacheData
+        )
+        let response = try await networkingClient.send(request: request)
+        XCTAssertEqual(response.status, 200)
+        XCTAssertEqual(response.source, .network)
+        XCTAssertFalse(response.body.isEmpty)
+        XCTAssertFalse(response.headers.isEmpty)
+    }
+    
+    func testSendPostRequest() async throws {
+        let request = SwiftyNetworkingRequest(
+            endpoint: "https://httpbin.org",
+            path: "post",
+            method: .post,
+            cachePolicy: .reloadIgnoringCacheData
+        )
+        let response = try await networkingClient.send(request: request)
+        XCTAssertEqual(response.status, 200)
+        XCTAssertEqual(response.source, .network)
+        XCTAssertFalse(response.body.isEmpty)
+        XCTAssertFalse(response.headers.isEmpty)
+    }
+    
+    func testSendPutRequest() async throws {
+        let request = SwiftyNetworkingRequest(
+            endpoint: "https://httpbin.org",
+            path: "put",
+            method: .put,
+            cachePolicy: .reloadIgnoringCacheData
+        )
+        let response = try await networkingClient.send(request: request)
+        XCTAssertEqual(response.status, 200)
+        XCTAssertEqual(response.source, .network)
+        XCTAssertFalse(response.body.isEmpty)
+        XCTAssertFalse(response.headers.isEmpty)
     }
 }
