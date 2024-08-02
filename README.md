@@ -26,7 +26,7 @@ Integrating SwiftyNetworking into your Swift project is straightforward. Follow 
 3. **Start Using SwiftyNetworking**:
    - Once SwiftNetworking is imported, you can start using its methods to execute a networking request.
    - Refer to the usage section for guidance regarding structs, classes and methods.
-5. **Run Your Project**:
+4. **Run Your Project**:
    - Build and run your project to ensure that SwiftyNetworking has been integrated successfully.
    - Test out the functionality you've implemented using SwiftyNetworking to ensure everything works as expected.
 That's it! You've successfully integrated SwiftyNetworking into your project and can now leverage its powerful features.
@@ -72,3 +72,17 @@ If successful, the method will return a `SwiftyNetworkingResponse` which is a si
       return String(data: body, encoding: .utf8)
    }
 ```
+
+---
+# Support
+Your generous donations help sustain and improve this project. Here's why supporting us is important:
+1. **Development and Maintenance**: Donations enable us to dedicate more time and resources to developing new features, fixing bugs, and maintaining the project's overall health. Your support directly contributes to the project's ongoing improvement and sustainability.
+2. **Community Support**: Your contributions show your support for the project and help foster a thriving community around it. Your generosity motivates us to keep pushing the project forward and encourages others to join the cause.
+3. **Open Source Sustainability**: By supporting open-source projects like ours, you're contributing to the sustainability of the entire open-source ecosystem. Your donations help ensure that valuable projects remain accessible to everyone.
+
+Every donation, no matter how small, makes a big difference. Thank you for considering supporting us!<br><br>
+<a href="https://www.buymeacoffee.com/antoniowar" target="_blank"><img src="https://github.com/appcraftstudio/buymeacoffee/raw/master/Images/snapshot-bmc-button.png" alt="Buy Me A Coffee" height="40"></a>
+
+---
+# License
+SwiftyNetworking is published under the MIT license.
