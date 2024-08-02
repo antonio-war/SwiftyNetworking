@@ -21,7 +21,7 @@ public struct SwiftyNetworkingRequest: Identifiable, Hashable, Sendable {
     public init(
         id: UUID = UUID(),
         endpoint: String,
-        path: String,
+        path: String = "/",
         method: SwiftyNetworkingMethod = .get,
         headers: [String: String] = [:],
         body: Data? = nil,
