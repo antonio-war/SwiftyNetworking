@@ -32,3 +32,19 @@ Integrating SwiftyNetworking into your Swift project is straightforward. Follow 
 That's it! You've successfully integrated SwiftyNetworking into your project and can now leverage its powerful features.
 
 ---
+# Usage
+The main steps for using SwiftyNetworking into your project are outlined below, guiding you through the process.
+
+### Request definition
+First, define a `SwiftyNetworkingRequest` which is a simple wrapper around `URLRequest` which allows you to easily set up everything you need to make an API call.
+Such as the classics method, headers and query parameters, but also some parameters closely linked to the iOS ecosystem such as cache policy or timeout management.
+
+```swift
+   let request = SwiftyNetworkingRequest(
+      endpoint: "https://jsonplaceholder.typicode.com",
+      path: "comments",
+      method: .get,
+      parameters: ["postId": 1],
+      cachePolicy: .reloadIgnoringCacheData
+   )
+```
