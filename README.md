@@ -63,3 +63,12 @@ Execute the request using the defined async method.
 ```swift
    let response = try await networkingClient.send(request: request)
 ```
+
+### Response handling
+If successful, the method will return a `SwiftyNetworkingResponse` which is a simple wrapper around `HTTPURLResponse` and allows you to easily access some elements like body, headers and few metrics. SwiftyNetworking always returns the source of the response and its duration allowing you to understand if it comes from the network or from the cache.
+
+```swift
+   if response.status == 200 && let body = response.body {
+      return String(data: body, encoding: .utf8)
+   }
+```
