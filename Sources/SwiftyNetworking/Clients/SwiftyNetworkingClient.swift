@@ -7,8 +7,7 @@
 
 import Foundation
 
-public actor SwiftyNetworkingClient: ObservableObject {
-    @Published public private (set) var history: [SwiftyNetworkingRequest: SwiftyNetworkingResponse] = [:]
+public actor SwiftyNetworkingClient {
     private let delegate: SwiftyNetworkingDelegate = SwiftyNetworkingDelegate()
     private let session: URLSession
     
@@ -30,11 +29,6 @@ public actor SwiftyNetworkingClient: ObservableObject {
             end: metrics.end,
             underlyingResponse: underlyingResponse
         )
-        history[request] = response
         return response
-    }
-    
-    public func flush() {
-        self.history = [:]
     }
 }
