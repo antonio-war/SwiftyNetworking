@@ -15,7 +15,7 @@ class SwiftyNetworkingDelegate: NSObject, URLSessionTaskDelegate {
             return .unknown
         }
         self.metrics[request] = nil
-        return metrics.resourceFetchType
+        return SwiftyNetworkingSource(resourceFetchType: metrics.resourceFetchType)
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {

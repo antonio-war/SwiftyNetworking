@@ -8,6 +8,6 @@
 import Foundation
 
 public enum SwiftyNetworkingScheme: String, Equatable, Hashable, Sendable {
-    case http = "HTTP"
-    case https = "HTTPS"
+    case http
+    case https
 }

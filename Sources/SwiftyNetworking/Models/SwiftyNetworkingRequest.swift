@@ -57,8 +57,8 @@ public struct SwiftyNetworkingRequest: Identifiable, Hashable, Sendable {
     
     var underlyingRequest: URLRequest {
         get throws {
-            var request = try URLRequest(url: url, cachePolicy: cachePolicy, timeoutInterval: timeout)
-            request.httpMethod = method.rawValue
+            var request = try URLRequest(url: url, cachePolicy: cachePolicy.underlyingCachePolicy, timeoutInterval: timeout)
+            request.httpMethod = method.rawValue.uppercased()
             request.httpBody = body
             request.allHTTPHeaderFields = headers
             return request
