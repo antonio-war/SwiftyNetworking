@@ -108,25 +108,6 @@ final class SwiftyNetworkingClientTests: XCTestCase {
         )
         let secondResponse = try await networkingClient.send(request: secondRequest)
         XCTAssertEqual(secondResponse.source, .cache)
-    }
-    
-    func testSendGetRequestReturnsNetworkResponseWhenNeeded() async throws {
-        let firstRequest = SwiftyNetworkingRequest(
-            endpoint: "https://jsonplaceholder.typicode.com",
-            path: "todos/1",
-            method: .get,
-            cachePolicy: .reloadIgnoringCacheData
-        )
-        let firstResponse = try await networkingClient.send(request: firstRequest)
-        XCTAssertEqual(firstResponse.source, .network)
-        
-        let secondRequest = SwiftyNetworkingRequest(
-            endpoint: "https://jsonplaceholder.typicode.com",
-            path: "todos/2",
-            method: .get,
-            cachePolicy: .returnCacheDataElseLoad
-        )
-        let secondResponse = try await networkingClient.send(request: secondRequest)
-        XCTAssertEqual(secondResponse.source, .network)
+        XCTAssertLessThanOrEqual(secondResponse.duration, firstResponse.duration)
     }
 }

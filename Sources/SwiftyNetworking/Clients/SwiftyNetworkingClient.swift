@@ -20,10 +20,15 @@ public actor SwiftyNetworkingClient {
     public func send(request: SwiftyNetworkingRequest) async throws -> SwiftyNetworkingResponse {
         let underlyingRequest = try request.underlyingRequest
         let (body, underlyingResponse) = try await session.data(for: underlyingRequest)
-        let source = delegate.source(for: underlyingRequest)
+        let metrics = delegate.metrics(for: underlyingRequest)
         guard let underlyingResponse = underlyingResponse as? HTTPURLResponse else {
             throw URLError(.cannotParseResponse)
         }
-        return SwiftyNetworkingResponse(source: source, body: body, underlyingResponse: underlyingResponse)
+        return SwiftyNetworkingResponse(
+            body: body,
+            source: metrics.source,
+            duration: metrics.duration,
+            underlyingResponse: underlyingResponse
+        )
     }
 }
