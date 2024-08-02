@@ -24,7 +24,7 @@ Integrating SwiftyNetworking into your Swift project is straightforward. Follow 
      import SwiftyNetworking
      ```
 3. **Start Using SwiftyNetworking**:
-   - Once SwiftNetworking is imported, you can start using its methods to execute a networking request.
+   - Once SwiftyNetworking is imported, you can start using its methods to execute a networking request.
    - Refer to the usage section for guidance regarding structs, classes and methods.
 4. **Run Your Project**:
    - Build and run your project to ensure that SwiftyNetworking has been integrated successfully.
