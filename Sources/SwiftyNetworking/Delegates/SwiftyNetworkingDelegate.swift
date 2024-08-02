@@ -12,11 +12,12 @@ class SwiftyNetworkingDelegate: NSObject, URLSessionTaskDelegate {
     
     func metrics(for request: URLRequest) -> SwiftyNetworkingMetrics {
         guard let metrics = metrics[request.hashValue] else {
-            return (.network, 0)
+            return (.network, Date(), Date())
         }
         let source = SwiftyNetworkingSource(resourceFetchType: metrics.resourceFetchType)
-        let duration = metrics.responseEndDate?.timeIntervalSince(metrics.requestStartDate ?? Date()) ?? 0.0
-        return (source, duration)
+        let start = metrics.requestStartDate ?? Date()
+        let end = metrics.responseEndDate ?? Date()
+        return (source, start, end)
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {

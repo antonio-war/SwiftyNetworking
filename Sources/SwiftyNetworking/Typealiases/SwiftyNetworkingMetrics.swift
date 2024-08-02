@@ -7,4 +7,4 @@
 
 import Foundation
 
-typealias SwiftyNetworkingMetrics = (source: SwiftyNetworkingSource, duration: TimeInterval)
+typealias SwiftyNetworkingMetrics = (source: SwiftyNetworkingSource, start: Date, end: Date)

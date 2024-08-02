@@ -13,9 +13,10 @@ public struct SwiftyNetworkingResponse: Identifiable, Hashable, Sendable {
     public let status: Int
     public let headers: [String: String]
     public let source: SwiftyNetworkingSource
-    public let duration: TimeInterval
+    public let start: Date
+    public let end: Date
     
-    init(id: UUID = UUID(), body: Data, source: SwiftyNetworkingSource, duration: TimeInterval, underlyingResponse: HTTPURLResponse) {
+    init(id: UUID = UUID(), body: Data, source: SwiftyNetworkingSource, start: Date, end: Date, underlyingResponse: HTTPURLResponse) {
         self.id = id
         self.body = body
         self.status = underlyingResponse.statusCode
@@ -25,8 +26,13 @@ public struct SwiftyNetworkingResponse: Identifiable, Hashable, Sendable {
             }
         }
         self.source = source
-        self.duration = duration
+        self.start = start
+        self.end = end
         self.underlyingResponse = underlyingResponse
+    }
+    
+    public var duration: TimeInterval {
+        end.timeIntervalSince(start)
     }
     
     var underlyingResponse: HTTPURLResponse

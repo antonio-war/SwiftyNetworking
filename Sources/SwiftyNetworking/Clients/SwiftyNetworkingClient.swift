@@ -7,16 +7,15 @@
 
 import Foundation
 
-public actor SwiftyNetworkingClient {
+public actor SwiftyNetworkingClient: ObservableObject {
+    @Published public private (set) var history: [SwiftyNetworkingRequest: SwiftyNetworkingResponse] = [:]
     private let delegate: SwiftyNetworkingDelegate = SwiftyNetworkingDelegate()
-    private let configuration: URLSessionConfiguration
     private let session: URLSession
     
     public init(configuration: URLSessionConfiguration = URLSessionConfiguration.default) {
-        self.configuration = configuration
         self.session = URLSession(configuration: configuration, delegate: delegate)
     }
-        
+    
     public func send(request: SwiftyNetworkingRequest) async throws -> SwiftyNetworkingResponse {
         let underlyingRequest = try request.underlyingRequest
         let (body, underlyingResponse) = try await session.data(for: underlyingRequest)
@@ -24,11 +23,18 @@ public actor SwiftyNetworkingClient {
         guard let underlyingResponse = underlyingResponse as? HTTPURLResponse else {
             throw URLError(.cannotParseResponse)
         }
-        return SwiftyNetworkingResponse(
+        let response = SwiftyNetworkingResponse(
             body: body,
             source: metrics.source,
-            duration: metrics.duration,
+            start: metrics.start,
+            end: metrics.end,
             underlyingResponse: underlyingResponse
         )
+        history[request] = response
+        return response
+    }
+    
+    public func flush() {
+        self.history = [:]
     }
 }
