@@ -9,6 +9,11 @@ import Foundation
 
 class SwiftyNetworkingDelegate: NSObject, URLSessionTaskDelegate {
     private var metrics: [Int: URLSessionTaskTransactionMetrics] = [:]
+    private let fileManager: FileManager
+    
+    init(fileManager: FileManager) {
+        self.fileManager = fileManager
+    }
     
     func metrics(for request: URLRequest) -> SwiftyNetworkingMetrics {
         guard let metrics = metrics[request.hashValue] else {
@@ -18,6 +23,10 @@ class SwiftyNetworkingDelegate: NSObject, URLSessionTaskDelegate {
         let start = metrics.requestStartDate ?? Date()
         let end = metrics.responseEndDate ?? Date()
         return (source, start, end)
+    }
+    
+    func dump(request: SwiftyNetworkingRequest, response: SwiftyNetworkingResponse) {
+        
     }
     
     func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {

@@ -8,7 +8,7 @@
 import Foundation
 
 public actor SwiftyNetworkingClient {
-    private let delegate: SwiftyNetworkingDelegate = SwiftyNetworkingDelegate()
+    private let delegate: SwiftyNetworkingDelegate = SwiftyNetworkingDelegate(fileManager: .default)
     private let session: URLSession
     
     public init(configuration: URLSessionConfiguration = URLSessionConfiguration.default) {
@@ -23,12 +23,14 @@ public actor SwiftyNetworkingClient {
             throw URLError(.cannotParseResponse)
         }
         let response = SwiftyNetworkingResponse(
+            id: request.id,
             body: body,
             source: metrics.source,
             start: metrics.start,
             end: metrics.end,
             underlyingResponse: underlyingResponse
         )
+        delegate.dump(request: request, response: response)
         return response
     }
 }

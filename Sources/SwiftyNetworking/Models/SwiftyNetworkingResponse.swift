@@ -16,7 +16,7 @@ public struct SwiftyNetworkingResponse: Identifiable, Hashable, Sendable {
     public let start: Date
     public let end: Date
     
-    init(id: UUID = UUID(), body: Data, source: SwiftyNetworkingSource, start: Date, end: Date, underlyingResponse: HTTPURLResponse) {
+    init(id: UUID, body: Data, source: SwiftyNetworkingSource, start: Date, end: Date, underlyingResponse: HTTPURLResponse) {
         self.id = id
         self.body = body
         self.status = underlyingResponse.statusCode
