@@ -13,7 +13,7 @@ final class SwiftyNetworkingDelegateTests: XCTestCase {
     var networkingDelegate: SwiftyNetworkingDelegate!
     
     override func setUpWithError() throws {
-        networkingDelegate = SwiftyNetworkingDelegate()
+        networkingDelegate = SwiftyNetworkingDelegate(metrics: [:])
     }
     
     override func tearDownWithError() throws {
@@ -21,10 +21,12 @@ final class SwiftyNetworkingDelegateTests: XCTestCase {
     }
     
     func testMetricsWhenMetricsAreNotAvailable() throws {
+        let calendar = Calendar.current
         let url = try XCTUnwrap(URL(string: "http://valid-endpoint/valid-path?id=1"))
         let request = URLRequest(url: url)
         let metrics = networkingDelegate.metrics(for: request)
         XCTAssertEqual(metrics.source, .network)
-        XCTAssertEqual(metrics.duration, 0)
+        XCTAssertEqual(calendar.compare(metrics.start, to: Date(), toGranularity: .second), .orderedSame)
+        XCTAssertEqual(calendar.compare(metrics.end, to: Date(), toGranularity: .second), .orderedSame)
     }
 }

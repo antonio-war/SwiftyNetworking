@@ -15,20 +15,48 @@ public actor SwiftyNetworkingClient {
         self.session = URLSession(configuration: configuration, delegate: delegate)
     }
     
-    public func send(request: SwiftyNetworkingRequest) async throws -> SwiftyNetworkingResponse {
-        let underlyingRequest = try request.underlyingRequest
-        let (body, underlyingResponse) = try await session.data(for: underlyingRequest)
-        let metrics = delegate.metrics(for: underlyingRequest)
-        guard let underlyingResponse = underlyingResponse as? HTTPURLResponse else {
-            throw URLError(.cannotParseResponse)
+    public func send(request: SwiftyNetworkingRequest, completion: @escaping (Result<SwiftyNetworkingResponse, Error>) -> Void) {
+        do {
+            let underlyingRequest = try request.underlyingRequest
+            
+            let dataTask = session.dataTask(with: underlyingRequest) { data, response, error in
+                if let error = error {
+                    completion(.failure(error))
+                    return
+                }
+                
+                guard let data = data, let httpResponse = response as? HTTPURLResponse else {
+                    completion(.failure(URLError(.cannotParseResponse)))
+                    return
+                }
+                
+                let metrics = self.delegate.metrics(for: underlyingRequest)
+                let response = SwiftyNetworkingResponse(
+                    body: data,
+                    source: metrics.source,
+                    start: metrics.start,
+                    end: metrics.end,
+                    underlyingResponse: httpResponse
+                )
+                completion(.success(response))
+            }
+            
+            dataTask.resume()
+        } catch {
+            completion(.failure(error))
         }
-        let response = SwiftyNetworkingResponse(
-            body: body,
-            source: metrics.source,
-            start: metrics.start,
-            end: metrics.end,
-            underlyingResponse: underlyingResponse
-        )
-        return response
+    }
+    
+    public func send(request: SwiftyNetworkingRequest) async throws -> SwiftyNetworkingResponse {
+        try await withCheckedThrowingContinuation { continuation in
+            send(request: request) { result in
+                switch result {
+                case .success(let response):
+                    continuation.resume(returning: response)
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
     }
 }
