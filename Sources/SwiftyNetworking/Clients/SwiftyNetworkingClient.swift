@@ -7,7 +7,7 @@
 
 import Foundation
 
-public actor SwiftyNetworkingClient {
+public struct SwiftyNetworkingClient {
     private let delegate: SwiftyNetworkingDelegate = SwiftyNetworkingDelegate(metrics: [:])
     private let session: URLSession
     
@@ -15,7 +15,7 @@ public actor SwiftyNetworkingClient {
         self.session = URLSession(configuration: configuration, delegate: delegate)
     }
     
-    public func send(request: SwiftyNetworkingRequest, completion: @escaping (Result<SwiftyNetworkingResponse, Error>) -> Void) {
+    public func send(_ request: SwiftyNetworkingRequest, completion: @escaping (Result<SwiftyNetworkingResponse, Error>) -> Void) {
         do {
             let underlyingRequest = try request.underlyingRequest
             
@@ -47,9 +47,9 @@ public actor SwiftyNetworkingClient {
         }
     }
     
-    public func send(request: SwiftyNetworkingRequest) async throws -> SwiftyNetworkingResponse {
+    public func send(_ request: SwiftyNetworkingRequest) async throws -> SwiftyNetworkingResponse {
         try await withCheckedThrowingContinuation { continuation in
-            send(request: request) { result in
+            send(request) { result in
                 switch result {
                 case .success(let response):
                     continuation.resume(returning: response)
@@ -58,5 +58,13 @@ public actor SwiftyNetworkingClient {
                 }
             }
         }
+    }
+    
+    public func send(_ router: SwiftyNetworkingRouter, completion: @escaping (Result<SwiftyNetworkingResponse, Error>) -> Void) {
+        send(router.rawValue, completion: completion)
+    }
+    
+    public func send(_ router: SwiftyNetworkingRouter) async throws -> SwiftyNetworkingResponse {
+        try await send(router.rawValue)
     }
 }

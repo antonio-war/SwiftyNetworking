@@ -27,7 +27,7 @@ final class SwiftyNetworkingClientTests: XCTestCase {
             method: .delete,
             cachePolicy: .reloadIgnoringCacheData
         )
-        let response = try await networkingClient.send(request: request)
+        let response = try await networkingClient.send(request)
         XCTAssertEqual(response.status, 200)
         XCTAssertEqual(response.source, .network)
         XCTAssertFalse(response.body.isEmpty)
@@ -41,7 +41,7 @@ final class SwiftyNetworkingClientTests: XCTestCase {
             method: .get,
             cachePolicy: .reloadIgnoringCacheData
         )
-        let response = try await networkingClient.send(request: request)
+        let response = try await networkingClient.send(request)
         XCTAssertEqual(response.status, 200)
         XCTAssertEqual(response.source, .network)
         XCTAssertFalse(response.body.isEmpty)
@@ -56,7 +56,7 @@ final class SwiftyNetworkingClientTests: XCTestCase {
             parameters: ["postId": 1],
             cachePolicy: .reloadIgnoringCacheData
         )
-        let response = try await networkingClient.send(request: request)
+        let response = try await networkingClient.send(request)
         XCTAssertEqual(response.status, 200)
         XCTAssertEqual(response.source, .network)
         XCTAssertFalse(response.body.isEmpty)
@@ -70,7 +70,7 @@ final class SwiftyNetworkingClientTests: XCTestCase {
             method: .get,
             cachePolicy: .reloadIgnoringCacheData
         )
-        let firstResponse = try await networkingClient.send(request: firstRequest)
+        let firstResponse = try await networkingClient.send(firstRequest)
         XCTAssertEqual(firstResponse.source, .network)
         
         let secondRequest = SwiftyNetworkingRequest(
@@ -79,7 +79,7 @@ final class SwiftyNetworkingClientTests: XCTestCase {
             method: .get,
             cachePolicy: .returnCacheDataElseLoad
         )
-        let secondResponse = try await networkingClient.send(request: secondRequest)
+        let secondResponse = try await networkingClient.send(secondRequest)
         XCTAssertEqual(secondResponse.source, .cache)
         XCTAssertLessThanOrEqual(secondResponse.duration, firstResponse.duration)
     }
@@ -91,7 +91,7 @@ final class SwiftyNetworkingClientTests: XCTestCase {
             method: .patch,
             cachePolicy: .reloadIgnoringCacheData
         )
-        let response = try await networkingClient.send(request: request)
+        let response = try await networkingClient.send(request)
         XCTAssertEqual(response.status, 200)
         XCTAssertEqual(response.source, .network)
         XCTAssertFalse(response.body.isEmpty)
@@ -105,7 +105,7 @@ final class SwiftyNetworkingClientTests: XCTestCase {
             method: .post,
             cachePolicy: .reloadIgnoringCacheData
         )
-        let response = try await networkingClient.send(request: request)
+        let response = try await networkingClient.send(request)
         XCTAssertEqual(response.status, 200)
         XCTAssertEqual(response.source, .network)
         XCTAssertFalse(response.body.isEmpty)
@@ -119,7 +119,7 @@ final class SwiftyNetworkingClientTests: XCTestCase {
             method: .put,
             cachePolicy: .reloadIgnoringCacheData
         )
-        let response = try await networkingClient.send(request: request)
+        let response = try await networkingClient.send(request)
         XCTAssertEqual(response.status, 200)
         XCTAssertEqual(response.source, .network)
         XCTAssertFalse(response.body.isEmpty)
