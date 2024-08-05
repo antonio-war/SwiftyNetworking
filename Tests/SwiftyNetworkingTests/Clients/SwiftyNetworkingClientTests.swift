@@ -145,6 +145,15 @@ final class SwiftyNetworkingClientTests: XCTestCase {
         XCTAssertFalse(response.headers.isEmpty)
     }
     
+    func testSendGetRequestWhenUrlIsInvalid() async throws {
+        let request = SwiftyNetworkingRequest(
+            endpoint: "http://valid-endpoint",
+            path: "valid-path",
+            cachePolicy: .reloadIgnoringLocalCacheData
+        )
+        await XCTAssertThrowsError(try await networkingClient.send(request))
+    }
+    
     func testSendPatchRequest() async throws {
         let request = SwiftyNetworkingRequest(
             endpoint: "https://httpbin.org",
