@@ -7,21 +7,37 @@
 
 import Foundation
 
-class SwiftyNetworkingDelegate: NSObject, URLSessionTaskDelegate {
-    private var metrics: [Int: URLSessionTaskTransactionMetrics] = [:]
+public class SwiftyNetworkingDelegate: NSObject, URLSessionTaskDelegate {
+    private var cache: NSCache<NSNumber, URLSessionTaskTransactionMetrics>
     
-    func metrics(for request: URLRequest) -> SwiftyNetworkingMetrics {
-        guard let metrics = metrics[request.hashValue] else {
-            return (.network, 0)
+    public init(cache: NSCache<NSNumber, URLSessionTaskTransactionMetrics> = NSCache(countLimit: 5)) {
+        self.cache = cache
+    }
+        
+    public func fetchType(for request: URLRequest) -> FetchType? {
+        guard let metrics = cache.object(forKey: request.hashValue as NSNumber) else {
+            return nil
         }
-        let source = SwiftyNetworkingSource(resourceFetchType: metrics.resourceFetchType)
-        let duration = metrics.responseEndDate?.timeIntervalSince(metrics.requestStartDate ?? Date()) ?? 0.0
-        return (source, duration)
+        return metrics.resourceFetchType
+    }
+        
+    public func start(for request: URLRequest) -> Date? {
+        guard let metrics = cache.object(forKey: request.hashValue as NSNumber) else {
+            return nil
+        }
+        return metrics.requestStartDate
     }
     
-    func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
+    public func end(for request: URLRequest) -> Date? {
+        guard let metrics = cache.object(forKey: request.hashValue as NSNumber) else {
+            return nil
+        }
+        return metrics.responseEndDate
+    }
+    
+    public func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
         for metrics in metrics.transactionMetrics {
-            self.metrics[metrics.request.hashValue] = metrics
+            cache.setObject(metrics, forKey: metrics.request.hashValue as NSNumber)
         }
     }
 }

@@ -10,12 +10,12 @@ import XCTest
 
 final class SwiftyNetworkingRequestTests: XCTestCase {
     
-    func testUrlWhenEndpointIsNotValid() {
+    func testUrlWhenEndpointIsInvalid() {
         let request = SwiftyNetworkingRequest(endpoint: "")
         XCTAssertThrowsError(try request.url)
     }
     
-    func testUrlWhenSchemaIsNotValid() {
+    func testUrlWhenSchemeIsInvalid() {
         let request = SwiftyNetworkingRequest(endpoint: "ftp://invalid-endpoint")
         XCTAssertThrowsError(try request.url)
     }
@@ -25,7 +25,7 @@ final class SwiftyNetworkingRequestTests: XCTestCase {
         XCTAssertNoThrow(try request.url)
     }
     
-    func testUrlWhenPathIsNotValid() {
+    func testUrlWhenPathIsInvalid() {
         let request = SwiftyNetworkingRequest(endpoint: "valid-path", path: "http://valid-endpoint")
         XCTAssertThrowsError(try request.url)
     }
@@ -36,18 +36,18 @@ final class SwiftyNetworkingRequestTests: XCTestCase {
     }
     
     func testUrlWhenParametersAreNotEmpty() {
-        let request = SwiftyNetworkingRequest(endpoint: "http://valid-endpoint", parameters: ["id": 1])
+        let request = SwiftyNetworkingRequest(endpoint: "http://valid-endpoint", parameters: ["id": "1"])
         XCTAssertNoThrow(try request.url)
         XCTAssertEqual(request.parameters, ["id": "1"])
     }
     
-    func testUnderlyingRequest() throws {
-        let request = SwiftyNetworkingRequest(endpoint: "http://valid-endpoint", path: "valid-path", parameters: ["id": 1])
-        let underlyingRequest = try XCTUnwrap(request.underlyingRequest)
-        XCTAssertEqual(underlyingRequest.url?.absoluteString, "http://valid-endpoint/valid-path?id=1")
-        XCTAssertEqual(underlyingRequest.httpMethod, "GET")
-        XCTAssertEqual(underlyingRequest.allHTTPHeaderFields, [:])
-        XCTAssertEqual(underlyingRequest.httpBody, nil)
-        XCTAssertEqual(underlyingRequest.timeoutInterval, 60)
+    func testRawValue() throws {
+        let request = SwiftyNetworkingRequest(endpoint: "http://valid-endpoint", path: "valid-path", parameters: ["id": "1"])
+        let rawValue = try XCTUnwrap(request.rawValue)
+        XCTAssertEqual(rawValue.url?.absoluteString, "http://valid-endpoint/valid-path?id=1")
+        XCTAssertEqual(rawValue.httpMethod, "GET")
+        XCTAssertEqual(rawValue.allHTTPHeaderFields, [:])
+        XCTAssertEqual(rawValue.httpBody, nil)
+        XCTAssertEqual(rawValue.timeoutInterval, 60)
     }
 }

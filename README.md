@@ -6,7 +6,7 @@
 **SwiftyNetworking** is a powerful and easy-to-use networking client written in Swift. 
 It simplifies making network requests and handling responses, allowing you to focus on building your application rather than dealing with the complexities of networking.
 - **Simple**: Designed with simplicity and ease of use in mind, SwiftyNetworking eliminates the need for extensive configuration, making it ready to use right out of the box.
-- **Asynchronous**: Built with modern Swift concurrency, supporting `async/await`.
+- **Asynchronous**: Built with modern Swift concurrency, supporting async/await.
 - **Flexible**: Customize requests with different methods, headers, and cache policies.
 - **Inspectable**: SwiftyNetworking collect some network metrics that can be used for in-depth debugging.
 
@@ -47,8 +47,9 @@ Such as the classics method, headers and query parameters, but also some paramet
       endpoint: "https://jsonplaceholder.typicode.com",
       path: "comments",
       method: .get,
-      parameters: ["postId": 1],
-      cachePolicy: .reloadIgnoringCacheData
+      parameters: ["postId": "1"],
+      cachePolicy: .reloadIgnoringCacheData,
+      timeout: 60
    )
 ```
 
@@ -64,16 +65,52 @@ A single instance should be enough to manage the entire networking layer of the 
 Execute the request using the defined async method.
 
 ```swift
-   let response = try await networkingClient.send(request: request)
+   let response = try await networkingClient.send(request)
 ```
+
+The same method is also provided in the classic versions with completion instead of async/await.
 
 ### Response handling
 If successful, the method will return a `SwiftyNetworkingResponse` which is a simple wrapper around `HTTPURLResponse` and allows you to easily access some elements like body, headers and few metrics. SwiftyNetworking always returns the source of the response and its duration allowing you to understand if it comes from the network or from the cache.
 
 ```swift
-   if response.status == 200 && let body = response.body {
+   if response.status == .success && let body = response.body {
       return String(data: body, encoding: .utf8)
    }
+```
+
+---
+# Advanced usage
+In a business context the basic functionality of SwiftyNetworking may not be enough, which is why additional constructs have been integrated.
+
+### Routing
+In a context where the app makes numerous requests of different types to the same API, it can be cumbersome to have to define more and more requests. That's why we introduced `SwiftyNetworkingRouter`, which is basically a protocol that allows you to define multiple requests that hypothetically point to the same API and therefore share resources.
+
+```swift
+   enum JsonPlaceholderRouter: SwiftyNetworkingRouter {
+      case users
+      case user(id: Int)
+    
+      var endpoint: String {
+         "https://jsonplaceholder.typicode.com"
+      }
+
+      var path: String {
+         switch self {
+            case .users:
+               "/"
+            case .user(let id):
+               "/\(id)"
+         }
+      }
+   }
+```
+
+Making a request to one of the exposed routes will be really easy!
+
+```swift
+   let request = JsonPlaceholderRouter.users
+   let response = try await client.send(request)
 ```
 
 ---

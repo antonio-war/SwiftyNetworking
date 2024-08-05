@@ -9,25 +9,31 @@ import Foundation
 
 public struct SwiftyNetworkingResponse: Identifiable, Hashable, Sendable {
     public let id: UUID
-    public let body: Data
-    public let status: Int
+    public let code: Int
     public let headers: [String: String]
-    public let source: SwiftyNetworkingSource
-    public let duration: TimeInterval
+    public let body: Data
+    public let fetchType: FetchType?
+    public let start: Date?
+    public let end: Date?
     
-    init(id: UUID = UUID(), body: Data, source: SwiftyNetworkingSource, duration: TimeInterval, underlyingResponse: HTTPURLResponse) {
+    init(
+        id: UUID = UUID(),
+        rawValue: HTTPURLResponse,
+        body: Data,
+        fetchType: FetchType? = nil,
+        start: Date? = nil,
+        end: Date? = nil
+    ) {
         self.id = id
-        self.body = body
-        self.status = underlyingResponse.statusCode
-        self.headers = underlyingResponse.allHeaderFields.reduce(into: [String: String]()) { result, header in
+        self.code = rawValue.statusCode
+        self.headers = rawValue.allHeaderFields.reduce(into: [String: String]()) { result, header in
             if let name = header.key as? String, let value = header.value as? String {
                 result[name] = value
             }
         }
-        self.source = source
-        self.duration = duration
-        self.underlyingResponse = underlyingResponse
+        self.body = body
+        self.fetchType = fetchType
+        self.start = start
+        self.end = end
     }
-    
-    var underlyingResponse: HTTPURLResponse
 }
