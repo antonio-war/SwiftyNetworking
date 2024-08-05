@@ -1,5 +1,5 @@
 //
-//  TestSwiftyNetworkingRouter.swift
+//  JsonPlaceholderRouter.swift
 //
 //
 //  Created by Antonio Guerra on 05/08/24.
@@ -8,7 +8,7 @@
 @testable import SwiftyNetworking
 import Foundation
 
-enum TestSwiftyNetworkingRouter: SwiftyNetworkingRouter {
+enum JsonPlaceholderRouter: SwiftyNetworkingRouter {
     case users
     case user(id: Int)
     

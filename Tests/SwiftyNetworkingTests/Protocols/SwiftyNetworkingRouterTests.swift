@@ -11,7 +11,7 @@ import XCTest
 final class SwiftyNetworkingRouterTests: XCTestCase {
 
     func testRawValueWhenCaseHasNotAssociatedParameters() throws {
-        let request = TestSwiftyNetworkingRouter.users.rawValue
+        let request = JsonPlaceholderRouter.users.rawValue
         XCTAssertEqual(request.endpoint, "https://jsonplaceholder.typicode.com")
         XCTAssertEqual(request.path, "/")
         XCTAssertEqual(request.method, .get)
@@ -23,7 +23,7 @@ final class SwiftyNetworkingRouterTests: XCTestCase {
     }
     
     func testRawValueWhenCaseHasAssociatedParameters() throws {
-        let request = TestSwiftyNetworkingRouter.user(id: 1).rawValue
+        let request = JsonPlaceholderRouter.user(id: 1).rawValue
         XCTAssertEqual(request.endpoint, "https://jsonplaceholder.typicode.com")
         XCTAssertEqual(request.path, "/1")
         XCTAssertEqual(request.method, .get)
