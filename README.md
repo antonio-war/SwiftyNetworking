@@ -79,6 +79,33 @@ If successful, the method will return a `SwiftyNetworkingResponse` which is a si
 ```
 
 ---
+# Advanced usage
+In a business context the basic functionality of SwiftyNetworking may not be enough, which is why additional constructs have been exposed.
+
+### Routing
+In a context where the app makes numerous requests of different types to the same API, it can be cumbersome to have to define more and more requests. That's why we introduced `SwiftyNetworkingRouter`, which is basically a protocol that allows you to define multiple requests that hypothetically point to the same API and therefore share resources.
+
+```swift
+   enum JsonPlaceholderRouter: SwiftyNetworkingRouter {
+      case users
+      case user(id: Int)
+    
+      var endpoint: String {
+         "https://jsonplaceholder.typicode.com"
+      }
+
+      var path: String {
+         switch self {
+            case .users:
+               "/"
+            case .user(let id):
+               "/\(id)"
+         }
+      }
+   }
+```
+
+---
 # Support
 Your generous donations help sustain and improve this project. Here's why supporting us is important:
 1. **Development and Maintenance**: Donations enable us to dedicate more time and resources to developing new features, fixing bugs, and maintaining the project's overall health. Your support directly contributes to the project's ongoing improvement and sustainability.
