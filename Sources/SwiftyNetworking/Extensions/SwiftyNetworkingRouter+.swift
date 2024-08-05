@@ -8,7 +8,7 @@
 import Foundation
 
 public extension SwiftyNetworkingRouter {
-    var method: SwiftyNetworkingMethod {
+    var method: Method {
         .get
     }
     
@@ -20,11 +20,11 @@ public extension SwiftyNetworkingRouter {
         nil
     }
     
-    var parameters: [String: Any] {
+    var parameters: [String: String] {
         [:]
     }
     
-    var cachePolicy: SwiftyNetworkingCachePolicy {
+    var cachePolicy: CachePolicy {
         .returnCacheDataElseLoad
     }
     

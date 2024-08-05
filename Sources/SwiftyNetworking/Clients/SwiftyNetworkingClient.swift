@@ -17,26 +17,26 @@ public struct SwiftyNetworkingClient {
     
     public func send(_ request: SwiftyNetworkingRequest, completion: @escaping (Result<SwiftyNetworkingResponse, Error>) -> Void) {
         do {
-            let underlyingRequest = try request.underlyingRequest
+            let rawRequest = try request.rawValue
             
-            let dataTask = session.dataTask(with: underlyingRequest) { data, response, error in
+            let dataTask = session.dataTask(with: rawRequest) { data, response, error in
                 if let error = error {
                     completion(.failure(error))
                     return
                 }
                 
-                guard let data = data, let httpResponse = response as? HTTPURLResponse else {
+                guard let body = data, let rawResponse = response as? HTTPURLResponse else {
                     completion(.failure(URLError(.cannotParseResponse)))
                     return
                 }
                 
-                let metrics = self.delegate.metrics(for: underlyingRequest)
+                let metrics = self.delegate.metrics(for: rawRequest)
                 let response = SwiftyNetworkingResponse(
-                    body: data,
-                    source: metrics.source,
+                    rawValue: rawResponse,
+                    body: body,
+                    fetchType: metrics.fetchType,
                     start: metrics.start,
-                    end: metrics.end,
-                    underlyingResponse: httpResponse
+                    end: metrics.end
                 )
                 completion(.success(response))
             }
