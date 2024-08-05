@@ -8,11 +8,18 @@
 import Foundation
 
 public struct SwiftyNetworkingClient {
-    private let delegate: SwiftyNetworkingDelegate = SwiftyNetworkingDelegate(metrics: [:])
     private let session: URLSession
+    private let delegate: SwiftyNetworkingDelegate
     
-    public init(configuration: URLSessionConfiguration = URLSessionConfiguration.default) {
-        self.session = URLSession(configuration: configuration, delegate: delegate)
+    public init(
+        configuration: URLSessionConfiguration = URLSessionConfiguration.default,
+        delegate: SwiftyNetworkingDelegate = SwiftyNetworkingDelegate()
+    ) {
+        self.session = URLSession(
+            configuration: configuration,
+            delegate: delegate
+        )
+        self.delegate = delegate
     }
     
     public func send(_ request: SwiftyNetworkingRequest, completion: @escaping (Result<SwiftyNetworkingResponse, Error>) -> Void) {
@@ -30,13 +37,12 @@ public struct SwiftyNetworkingClient {
                     return
                 }
                 
-                let metrics = self.delegate.metrics(for: rawRequest)
                 let response = SwiftyNetworkingResponse(
                     rawValue: rawResponse,
                     body: body,
-                    fetchType: metrics.fetchType,
-                    start: metrics.start,
-                    end: metrics.end
+                    fetchType: delegate.fetchType(for: rawRequest),
+                    start: delegate.start(for: rawRequest),
+                    end: delegate.end(for: rawRequest)
                 )
                 completion(.success(response))
             }
