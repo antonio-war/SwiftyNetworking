@@ -80,7 +80,7 @@ If successful, the method will return a `SwiftyNetworkingResponse` which is a si
 
 ---
 # Advanced usage
-In a business context the basic functionality of SwiftyNetworking may not be enough, which is why additional constructs have been exposed.
+In a business context the basic functionality of SwiftyNetworking may not be enough, which is why additional constructs have been integrated.
 
 ### Routing
 In a context where the app makes numerous requests of different types to the same API, it can be cumbersome to have to define more and more requests. That's why we introduced `SwiftyNetworkingRouter`, which is basically a protocol that allows you to define multiple requests that hypothetically point to the same API and therefore share resources.
@@ -103,6 +103,13 @@ In a context where the app makes numerous requests of different types to the sam
          }
       }
    }
+```
+
+Making a request to one of the exposed routes will be really easy!
+
+```swift
+   let request = JsonPlaceholderRouter.users
+   let response = try await client.send(request)
 ```
 
 ---
