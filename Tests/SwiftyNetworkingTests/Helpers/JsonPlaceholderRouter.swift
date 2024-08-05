@@ -19,9 +19,9 @@ enum JsonPlaceholderRouter: SwiftyNetworkingRouter {
     var path: String {
         switch self {
         case .users:
-            "/"
+            "users/"
         case .user(let id):
-            "/\(id)"
+            "users/\(id)"
         }
     }
 }
