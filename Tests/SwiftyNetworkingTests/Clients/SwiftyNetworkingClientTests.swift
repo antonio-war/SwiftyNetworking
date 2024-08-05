@@ -89,6 +89,62 @@ final class SwiftyNetworkingClientTests: XCTestCase {
         XCTAssertLessThanOrEqual(secondDuration, firstDuration)
     }
     
+    func testSendGetRequestWhenStatusIsRedirection() async throws {
+        let request = SwiftyNetworkingRequest(
+            endpoint: "https://httpbin.org",
+            path: "status/300",
+            cachePolicy: .reloadIgnoringCacheData
+        )
+        let response = try await networkingClient.send(request)
+        XCTAssertEqual(response.code, 300)
+        XCTAssertEqual(response.status, .redirection)
+        XCTAssertEqual(response.fetchType, .networkLoad)
+        XCTAssertTrue(response.body.isEmpty)
+        XCTAssertFalse(response.headers.isEmpty)
+    }
+    
+    func testSendGetRequestWhenStatusIsClientError() async throws {
+        let request = SwiftyNetworkingRequest(
+            endpoint: "https://httpbin.org",
+            path: "status/400",
+            cachePolicy: .reloadIgnoringCacheData
+        )
+        let response = try await networkingClient.send(request)
+        XCTAssertEqual(response.code, 400)
+        XCTAssertEqual(response.status, .clientError)
+        XCTAssertEqual(response.fetchType, .networkLoad)
+        XCTAssertTrue(response.body.isEmpty)
+        XCTAssertFalse(response.headers.isEmpty)
+    }
+    
+    func testSendGetRequestWhenStatusIsServerError() async throws {
+        let request = SwiftyNetworkingRequest(
+            endpoint: "https://httpbin.org",
+            path: "status/500",
+            cachePolicy: .reloadIgnoringCacheData
+        )
+        let response = try await networkingClient.send(request)
+        XCTAssertEqual(response.code, 500)
+        XCTAssertEqual(response.status, .serverError)
+        XCTAssertEqual(response.fetchType, .networkLoad)
+        XCTAssertTrue(response.body.isEmpty)
+        XCTAssertFalse(response.headers.isEmpty)
+    }
+    
+    func testSendGetRequestWhenStatusIsInvalid() async throws {
+        let request = SwiftyNetworkingRequest(
+            endpoint: "https://httpbin.org",
+            path: "status/600",
+            cachePolicy: .reloadIgnoringCacheData
+        )
+        let response = try await networkingClient.send(request)
+        XCTAssertEqual(response.code, 600)
+        XCTAssertEqual(response.status, .invalid)
+        XCTAssertEqual(response.fetchType, .networkLoad)
+        XCTAssertTrue(response.body.isEmpty)
+        XCTAssertFalse(response.headers.isEmpty)
+    }
+    
     func testSendPatchRequest() async throws {
         let request = SwiftyNetworkingRequest(
             endpoint: "https://httpbin.org",
