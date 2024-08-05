@@ -48,7 +48,8 @@ Such as the classics method, headers and query parameters, but also some paramet
       path: "comments",
       method: .get,
       parameters: ["postId": "1"],
-      cachePolicy: .reloadIgnoringCacheData
+      cachePolicy: .reloadIgnoringCacheData,
+      timeout: 60
    )
 ```
 
