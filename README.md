@@ -98,9 +98,9 @@ In a context where the app makes numerous requests of different types to the sam
       var path: String {
          switch self {
             case .users:
-               "/"
+               "users/"
             case .user(let id):
-               "/\(id)"
+               "users/\(id)"
          }
       }
    }
