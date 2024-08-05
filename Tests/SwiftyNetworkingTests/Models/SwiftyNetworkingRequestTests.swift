@@ -15,7 +15,7 @@ final class SwiftyNetworkingRequestTests: XCTestCase {
         XCTAssertThrowsError(try request.url)
     }
     
-    func testUrlWhenSchemaIsInvalid() {
+    func testUrlWhenSchemeIsInvalid() {
         let request = SwiftyNetworkingRequest(endpoint: "ftp://invalid-endpoint")
         XCTAssertThrowsError(try request.url)
     }
