@@ -28,8 +28,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
             cachePolicy: .reloadIgnoringCacheData
         )
         let response = try await networkingClient.send(request)
-        XCTAssertEqual(response.status, 200)
-        XCTAssertEqual(response.source, .network)
+        XCTAssertEqual(response.code, 200)
+        XCTAssertEqual(response.fetchType, .networkLoad)
         XCTAssertFalse(response.body.isEmpty)
         XCTAssertFalse(response.headers.isEmpty)
     }
@@ -42,8 +42,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
             cachePolicy: .reloadIgnoringCacheData
         )
         let response = try await networkingClient.send(request)
-        XCTAssertEqual(response.status, 200)
-        XCTAssertEqual(response.source, .network)
+        XCTAssertEqual(response.code, 200)
+        XCTAssertEqual(response.fetchType, .networkLoad)
         XCTAssertFalse(response.body.isEmpty)
         XCTAssertFalse(response.headers.isEmpty)
     }
@@ -53,12 +53,12 @@ final class SwiftyNetworkingClientTests: XCTestCase {
             endpoint: "https://jsonplaceholder.typicode.com",
             path: "comments",
             method: .get,
-            parameters: ["postId": 1],
+            parameters: ["postId": "1"],
             cachePolicy: .reloadIgnoringCacheData
         )
         let response = try await networkingClient.send(request)
-        XCTAssertEqual(response.status, 200)
-        XCTAssertEqual(response.source, .network)
+        XCTAssertEqual(response.code, 200)
+        XCTAssertEqual(response.fetchType, .networkLoad)
         XCTAssertFalse(response.body.isEmpty)
         XCTAssertFalse(response.headers.isEmpty)
     }
@@ -71,7 +71,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
             cachePolicy: .reloadIgnoringCacheData
         )
         let firstResponse = try await networkingClient.send(firstRequest)
-        XCTAssertEqual(firstResponse.source, .network)
+        let firstDuration = try XCTUnwrap(firstResponse.duration)
+        XCTAssertEqual(firstResponse.fetchType, .networkLoad)
         
         let secondRequest = SwiftyNetworkingRequest(
             endpoint: "https://jsonplaceholder.typicode.com",
@@ -80,8 +81,9 @@ final class SwiftyNetworkingClientTests: XCTestCase {
             cachePolicy: .returnCacheDataElseLoad
         )
         let secondResponse = try await networkingClient.send(secondRequest)
-        XCTAssertEqual(secondResponse.source, .cache)
-        XCTAssertLessThanOrEqual(secondResponse.duration, firstResponse.duration)
+        let secondDuration = try XCTUnwrap(secondResponse.duration)
+        XCTAssertEqual(secondResponse.fetchType, .localCache)
+        XCTAssertLessThanOrEqual(secondDuration, firstDuration)
     }
     
     func testSendPatchRequest() async throws {
@@ -92,8 +94,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
             cachePolicy: .reloadIgnoringCacheData
         )
         let response = try await networkingClient.send(request)
-        XCTAssertEqual(response.status, 200)
-        XCTAssertEqual(response.source, .network)
+        XCTAssertEqual(response.code, 200)
+        XCTAssertEqual(response.fetchType, .networkLoad)
         XCTAssertFalse(response.body.isEmpty)
         XCTAssertFalse(response.headers.isEmpty)
     }
@@ -106,8 +108,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
             cachePolicy: .reloadIgnoringCacheData
         )
         let response = try await networkingClient.send(request)
-        XCTAssertEqual(response.status, 200)
-        XCTAssertEqual(response.source, .network)
+        XCTAssertEqual(response.code, 200)
+        XCTAssertEqual(response.fetchType, .networkLoad)
         XCTAssertFalse(response.body.isEmpty)
         XCTAssertFalse(response.headers.isEmpty)
     }
@@ -120,8 +122,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
             cachePolicy: .reloadIgnoringCacheData
         )
         let response = try await networkingClient.send(request)
-        XCTAssertEqual(response.status, 200)
-        XCTAssertEqual(response.source, .network)
+        XCTAssertEqual(response.code, 200)
+        XCTAssertEqual(response.fetchType, .networkLoad)
         XCTAssertFalse(response.body.isEmpty)
         XCTAssertFalse(response.headers.isEmpty)
     }

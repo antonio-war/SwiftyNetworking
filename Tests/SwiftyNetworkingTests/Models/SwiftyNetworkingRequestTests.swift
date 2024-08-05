@@ -36,14 +36,14 @@ final class SwiftyNetworkingRequestTests: XCTestCase {
     }
     
     func testUrlWhenParametersAreNotEmpty() {
-        let request = SwiftyNetworkingRequest(endpoint: "http://valid-endpoint", parameters: ["id": 1])
+        let request = SwiftyNetworkingRequest(endpoint: "http://valid-endpoint", parameters: ["id": "1"])
         XCTAssertNoThrow(try request.url)
         XCTAssertEqual(request.parameters, ["id": "1"])
     }
     
     func testUnderlyingRequest() throws {
-        let request = SwiftyNetworkingRequest(endpoint: "http://valid-endpoint", path: "valid-path", parameters: ["id": 1])
-        let underlyingRequest = try XCTUnwrap(request.underlyingRequest)
+        let request = SwiftyNetworkingRequest(endpoint: "http://valid-endpoint", path: "valid-path", parameters: ["id": "1"])
+        let underlyingRequest = try XCTUnwrap(request.rawValue)
         XCTAssertEqual(underlyingRequest.url?.absoluteString, "http://valid-endpoint/valid-path?id=1")
         XCTAssertEqual(underlyingRequest.httpMethod, "GET")
         XCTAssertEqual(underlyingRequest.allHTTPHeaderFields, [:])
