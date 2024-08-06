@@ -10,25 +10,25 @@ import XCTest
 
 final class SwiftyNetworkingDelegateTests: XCTestCase {
     
-    var networkingDelegate: SwiftyNetworkingDelegate!
+    var delegate: SwiftyNetworkingDelegate!
     var client: SwiftyNetworkingClient!
     
     override func setUpWithError() throws {
-        networkingDelegate = SwiftyNetworkingDelegate(cache: NSCache(countLimit: 1))
-        client = SwiftyNetworkingClient(configuration: .default, delegate: networkingDelegate)
+        delegate = SwiftyNetworkingDelegate(cache: NSCache(countLimit: 1))
+        client = SwiftyNetworkingClient(configuration: .default, delegate: delegate)
     }
     
     override func tearDownWithError() throws {
-        networkingDelegate = nil
+        delegate = nil
         client = nil
     }
     
     func testCacheWhenMetricsAreNotAvailable() throws {
         let url = try XCTUnwrap(URL(string: "http://valid-endpoint/valid-path?id=1"))
         let request = URLRequest(url: url)
-        XCTAssertNil(networkingDelegate.fetchType(for: request))
-        XCTAssertNil(networkingDelegate.start(for: request))
-        XCTAssertNil(networkingDelegate.end(for: request))
+        XCTAssertNil(delegate.fetchType(for: request))
+        XCTAssertNil(delegate.start(for: request))
+        XCTAssertNil(delegate.end(for: request))
     }
     
     func testCacheWhenMetricsAreAvailable() async throws {
@@ -36,9 +36,9 @@ final class SwiftyNetworkingDelegateTests: XCTestCase {
         let response = try await client.send(request)
         let rawRequest = try request.rawValue.rawValue
         XCTAssertEqual(response.status, .success)
-        XCTAssertNotNil(networkingDelegate.fetchType(for: rawRequest))
-        XCTAssertNotNil(networkingDelegate.start(for: rawRequest))
-        XCTAssertNotNil(networkingDelegate.end(for: rawRequest))
+        XCTAssertNotNil(delegate.fetchType(for: rawRequest))
+        XCTAssertNotNil(delegate.start(for: rawRequest))
+        XCTAssertNotNil(delegate.end(for: rawRequest))
     }
     
     func testCacheIsCleanedWhenTheLimitIsReached() async throws {
@@ -48,8 +48,8 @@ final class SwiftyNetworkingDelegateTests: XCTestCase {
         let secondRequest = JsonPlaceholderRouter.user(id: 1)
         let _ = try await client.send(secondRequest)
         XCTAssertEqual(firstResponse.status, .success)
-        XCTAssertNil(networkingDelegate.fetchType(for: firstRawRequest))
-        XCTAssertNil(networkingDelegate.start(for: firstRawRequest))
-        XCTAssertNil(networkingDelegate.end(for: firstRawRequest))
+        XCTAssertNil(delegate.fetchType(for: firstRawRequest))
+        XCTAssertNil(delegate.start(for: firstRawRequest))
+        XCTAssertNil(delegate.end(for: firstRawRequest))
     }
 }

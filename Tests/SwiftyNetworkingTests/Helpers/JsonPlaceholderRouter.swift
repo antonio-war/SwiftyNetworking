@@ -24,4 +24,8 @@ enum JsonPlaceholderRouter: SwiftyNetworkingRouter {
             "users/\(id)"
         }
     }
+    
+    var cachePolicy: CachePolicy {
+        .reloadIgnoringLocalCacheData
+    }
 }
