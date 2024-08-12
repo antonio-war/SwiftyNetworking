@@ -113,6 +113,15 @@ Making a request to one of the exposed routes will be really easy!
    let response = try await client.send(request)
 ```
 
+### Decoding
+In most cases once you make a network call you need to read the contents of the response body, obviously in the iOS environment this is achieved using the power of the Decodable protocol and its Decoder, that's why SwiftyNetworking also provides methods with integrated decoding. They are very useful when the decoding operation must be done in a simple way, without any custom behavior, SwiftyNetworking will relieve you of any responsibility.
+
+```swift
+let users = try await networkingClient.send(JsonPlaceholderRouter.users, decoding: [JsonPlaceholderUser].self, using: JSONDecoder())
+```
+
+By default the method uses its own instance of JSONDecoder, however, as shown it is possible to inject a custom decoder if a particular decoding configuration is necessary.
+
 ---
 # Support
 Your generous donations help sustain and improve this project. Here's why supporting us is important:
