@@ -106,6 +106,9 @@ In a context where the app makes numerous requests of different types to the sam
    }
 ```
 
+### Decoding
+In most cases once you make a network call you need to read the contents of the response body, obviously in the iOS environment this is achieved using the power of the Decodable protocol and its Decoder, that's why SwiftyNetworking also provides methods with integrated decoding. They are very useful when the decoding operation must be done in a simple way, without any custom behavior, SwiftyNetworking will relieve you of any responsibility.
+
 Making a request to one of the exposed routes will be really easy!
 
 ```swift
