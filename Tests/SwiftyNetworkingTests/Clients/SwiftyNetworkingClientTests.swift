@@ -154,6 +154,48 @@ final class SwiftyNetworkingClientTests: XCTestCase {
         await XCTAssertThrowsError(try await networkingClient.send(request))
     }
     
+    func testSendGetRequestWithDecoding() async throws {
+        let request = SwiftyNetworkingRequest(
+            endpoint: "https://jsonplaceholder.typicode.com",
+            path: "/users",
+            cachePolicy: .reloadIgnoringCacheData
+        )
+        let users = try await networkingClient.send(request, decoding: [JsonPlaceholderUser].self)
+        XCTAssertFalse(users.isEmpty)
+    }
+    
+    func testSendGetRequestWithDecodingWhenStatusIsInvalid() async throws {
+        let request = SwiftyNetworkingRequest(
+            endpoint: "https://httpbin.org",
+            path: "status/600",
+            cachePolicy: .reloadIgnoringCacheData
+        )
+        await XCTAssertThrowsError(try await networkingClient.send(request, decoding: [JsonPlaceholderUser].self))
+    }
+    
+    func testSendGetRequestWithDecodingWhenModelIsInvalid() async throws {
+        let request = SwiftyNetworkingRequest(
+            endpoint: "https://jsonplaceholder.typicode.com",
+            path: "/users",
+            cachePolicy: .reloadIgnoringCacheData
+        )
+        await XCTAssertThrowsError(try await networkingClient.send(request, decoding: [JsonPlaceholderInvalidUser].self))
+    }
+    
+    func testSendGetRequestUsingRouter() async throws {
+        let response = try await networkingClient.send(JsonPlaceholderRouter.users)
+        XCTAssertEqual(response.code, 200)
+        XCTAssertEqual(response.status, .success)
+        XCTAssertEqual(response.fetchType, .networkLoad)
+        XCTAssertFalse(response.body.isEmpty)
+        XCTAssertFalse(response.headers.isEmpty)
+    }
+    
+    func testSendGetRequestWithDecodingUsingRouter() async throws {
+        let users = try await networkingClient.send(JsonPlaceholderRouter.users, decoding: [JsonPlaceholderUser].self)
+        XCTAssertFalse(users.isEmpty)
+    }
+    
     func testSendPatchRequest() async throws {
         let request = SwiftyNetworkingRequest(
             endpoint: "https://httpbin.org",
