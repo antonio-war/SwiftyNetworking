@@ -19,15 +19,14 @@ extension SwiftyNetworkingRequest {
         body: Data? = nil,
         cachePolicy: CachePolicy = .returnCacheDataElseLoad,
         timeout: TimeInterval = 60
-    ) throws {
-        guard let components = URLComponents(string: url.absoluteString), let endpoint = components.host else {
-            throw URLError(.badURL)
-        }
+    ) {
         self.init(
             id: id,
-            endpoint: endpoint,
-            path: components.path,
-            parameters: [:],
+            endpoint: (url.scheme ?? "") + "://" + (url.host ?? ""),
+            path: url.path,
+            parameters: URLComponents(string: url.absoluteString)?.queryItems?.reduce(into: [String: String]()) { result, parameter in
+                result[parameter.name] = parameter.value
+            } ?? [:],
             method: method,
             headers: headers,
             body: body,

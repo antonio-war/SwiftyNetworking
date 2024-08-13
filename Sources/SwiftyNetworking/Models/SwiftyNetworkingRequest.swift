@@ -31,7 +31,7 @@ public struct SwiftyNetworkingRequest: Identifiable, Hashable, Sendable {
     ) {
         self.id = id
         self.endpoint = endpoint
-        self.path = path
+        self.path = path.first == "/" ? path : "/" + path
         self.parameters = parameters
         self.method = method
         self.headers = headers
