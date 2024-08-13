@@ -12,9 +12,9 @@ public struct SwiftyNetworkingRequest: Identifiable, Hashable, Sendable {
     public let endpoint: String
     public let path: String
     public let method: Method
+    public let parameters: [String: String]
     public let headers: [String: String]
     public let body: Data?
-    public let parameters: [String: String]
     public let cachePolicy: CachePolicy
     public let timeout: TimeInterval
         
@@ -22,20 +22,20 @@ public struct SwiftyNetworkingRequest: Identifiable, Hashable, Sendable {
         id: UUID = UUID(),
         endpoint: String,
         path: String = "/",
+        parameters: [String: String] = [:],
         method: Method = .get,
         headers: [String: String] = [:],
         body: Data? = nil,
-        parameters: [String: String] = [:],
         cachePolicy: CachePolicy = .returnCacheDataElseLoad,
         timeout: TimeInterval = 60
     ) {
         self.id = id
         self.endpoint = endpoint
         self.path = path
+        self.parameters = parameters
         self.method = method
         self.headers = headers
         self.body = body
-        self.parameters = parameters
         self.cachePolicy = cachePolicy
         self.timeout = timeout
     }

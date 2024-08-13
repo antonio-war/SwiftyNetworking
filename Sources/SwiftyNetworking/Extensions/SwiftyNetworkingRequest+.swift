@@ -8,7 +8,33 @@
 import Foundation
 
 extension SwiftyNetworkingRequest {
+    
     typealias RawValue = URLRequest
+    
+    public init(
+        id: UUID = UUID(),
+        url: URL,
+        method: Method = .get,
+        headers: [String: String] = [:],
+        body: Data? = nil,
+        cachePolicy: CachePolicy = .returnCacheDataElseLoad,
+        timeout: TimeInterval = 60
+    ) throws {
+        guard let components = URLComponents(string: url.absoluteString), let endpoint = components.host else {
+            throw URLError(.badURL)
+        }
+        self.init(
+            id: id,
+            endpoint: endpoint,
+            path: components.path,
+            parameters: [:],
+            method: method,
+            headers: headers,
+            body: body,
+            cachePolicy: cachePolicy,
+            timeout: timeout
+        )
+    }
     
     enum Scheme: String, Equatable, Hashable, Sendable {
         case http

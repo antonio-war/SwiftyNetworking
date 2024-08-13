@@ -8,6 +8,10 @@
 import Foundation
 
 public extension SwiftyNetworkingRouter {
+    var parameters: [String: String] {
+        [:]
+    }
+    
     var method: Method {
         .get
     }
@@ -18,10 +22,6 @@ public extension SwiftyNetworkingRouter {
     
     var body: Data? {
         nil
-    }
-    
-    var parameters: [String: String] {
-        [:]
     }
     
     var cachePolicy: CachePolicy {
@@ -40,10 +40,9 @@ extension SwiftyNetworkingRouter {
         SwiftyNetworkingRequest(
             endpoint: endpoint,
             path: path,
-            method: method,
+            parameters: parameters, method: method,
             headers: headers,
             body: body,
-            parameters: parameters,
             cachePolicy: cachePolicy,
             timeout: timeout
         )
