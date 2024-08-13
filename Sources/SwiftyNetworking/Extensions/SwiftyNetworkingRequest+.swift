@@ -20,11 +20,12 @@ extension SwiftyNetworkingRequest {
         cachePolicy: CachePolicy = .returnCacheDataElseLoad,
         timeout: TimeInterval = 60
     ) {
+        let components = URLComponents(string: url.absoluteString)
         self.init(
             id: id,
-            endpoint: (url.scheme ?? "") + "://" + (url.host ?? ""),
+            endpoint: (components?.scheme ?? "") + "://" + (components?.host ?? ""),
             path: url.path,
-            parameters: URLComponents(string: url.absoluteString)?.queryItems?.reduce(into: [String: String]()) { result, parameter in
+            parameters: components?.queryItems?.reduce(into: [String: String]()) { result, parameter in
                 result[parameter.name] = parameter.value
             } ?? [:],
             method: method,
