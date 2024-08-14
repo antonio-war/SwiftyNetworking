@@ -46,12 +46,16 @@ Such as the classics method, headers and query parameters, but also some paramet
    let request = SwiftyNetworkingRequest(
       endpoint: "https://jsonplaceholder.typicode.com",
       path: "comments",
-      method: .get,
       parameters: ["postId": "1"],
+      method: .get,
+      headers: [:],
+      body: nil,
       cachePolicy: .reloadIgnoringCacheData,
       timeout: 60
    )
 ```
+
+Alternatively, you can initialize the request directly with a valid URL, without manually specifying endpoints, path and parameters.
 
 ### Client creation
 Create a `SwiftyNetworkingClient` instance using the default or a custom URLSessionConfiguration.
