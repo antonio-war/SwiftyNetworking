@@ -54,8 +54,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
         let request = SwiftyNetworkingRequest(
             endpoint: "https://jsonplaceholder.typicode.com",
             path: "comments",
+            parameters: ["postId": "1"], 
             method: .get,
-            parameters: ["postId": "1"],
             cachePolicy: .reloadIgnoringCacheData
         )
         let response = try await networkingClient.send(request)

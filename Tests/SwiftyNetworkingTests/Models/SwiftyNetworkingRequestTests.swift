@@ -10,6 +10,14 @@ import XCTest
 
 final class SwiftyNetworkingRequestTests: XCTestCase {
     
+    func testInitFromUrl() throws {
+        let id = UUID()
+        let url = try XCTUnwrap(URL(string: "https://www.example.com/path?name=test"))
+        let firstRequest = SwiftyNetworkingRequest(id: id, url: url)
+        let secondRequest = SwiftyNetworkingRequest(id: id, endpoint: "https://www.example.com", path: "path", parameters: ["name": "test"])
+        XCTAssertEqual(firstRequest, secondRequest)
+    }
+    
     func testUrlWhenEndpointIsInvalid() {
         let request = SwiftyNetworkingRequest(endpoint: "")
         XCTAssertThrowsError(try request.url)
