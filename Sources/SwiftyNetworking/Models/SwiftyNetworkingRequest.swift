@@ -86,7 +86,7 @@ public struct SwiftyNetworkingRequest: Identifiable, Hashable, Sendable {
         self.url = url
         self.scheme = scheme
         self.host = host
-        self.path = path
+        self.path = path.first == "/" ? path : "/" + path
         self.parameters = parameters
         self.method = method
         self.headers = headers

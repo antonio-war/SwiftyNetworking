@@ -88,20 +88,4 @@ public struct SwiftyNetworkingClient {
             }
         }
     }
-    
-//    public func send(_ router: SwiftyNetworkingRouter, completion: @escaping (Result<SwiftyNetworkingResponse, Error>) -> Void) {
-//        send(router.rawValue, completion: completion)
-//    }
-//    
-//    public func send(_ router: SwiftyNetworkingRouter) async throws -> SwiftyNetworkingResponse {
-//        try await send(router.rawValue)
-//    }
-//    
-//    public func send<Model: Decodable>(_ router: SwiftyNetworkingRouter, decoding model: Model.Type, using decoder: JSONDecoder = JSONDecoder(), completion: @escaping (Result<Model, Error>) -> Void) {
-//        send(router.rawValue, decoding: model, using: decoder, completion: completion)
-//    }
-//    
-//    public func send<Model: Decodable>(_ router: SwiftyNetworkingRouter, decoding model: Model.Type, using decoder: JSONDecoder = JSONDecoder()) async throws -> Model {
-//        try await send(router.rawValue, decoding: model, using: decoder)
-//    }
 }

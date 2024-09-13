@@ -12,8 +12,8 @@ enum JsonPlaceholderRouter: SwiftyNetworkingRouter {
     case users
     case user(id: Int)
     
-    var endpoint: String {
-        "https://jsonplaceholder.typicode.com"
+    var host: String {
+        "jsonplaceholder.typicode.com"
     }
     
     var path: String {

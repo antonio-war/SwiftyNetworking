@@ -8,6 +8,15 @@
 import Foundation
 
 public extension SwiftyNetworkingRouter {
+
+    var scheme: Scheme {
+        .https
+    }
+    
+    var path: String {
+        "/"
+    }
+    
     var parameters: [String: String] {
         [:]
     }
@@ -31,20 +40,19 @@ public extension SwiftyNetworkingRouter {
     var timeout: TimeInterval {
         60
     }
+    
+    var request: SwiftyNetworkingRequest {
+        get throws {
+            try SwiftyNetworkingRequest(
+                scheme: scheme,
+                host: host,
+                path: path,
+                parameters: parameters, method: method,
+                headers: headers,
+                body: body,
+                cachePolicy: cachePolicy,
+                timeout: timeout
+            )
+        }
+    }
 }
-
-//extension SwiftyNetworkingRouter {
-//    typealias RawValue = SwiftyNetworkingRequest
-//    
-//    var rawValue: RawValue {
-//        SwiftyNetworkingRequest(
-//            endpoint: endpoint,
-//            path: path,
-//            parameters: parameters, method: method,
-//            headers: headers,
-//            body: body,
-//            cachePolicy: cachePolicy,
-//            timeout: timeout
-//        )
-//    }
-//}

@@ -8,8 +8,10 @@
 import Foundation
 
 public protocol SwiftyNetworkingRouter {
+    typealias Scheme = SwiftyNetworkingRequest.Scheme
     typealias Method = SwiftyNetworkingRequest.Method
-    var endpoint: String { get }
+    var scheme: Scheme { get }
+    var host: String { get }
     var path: String { get }
     var parameters: [String: String] { get }
     var method: Method { get }
