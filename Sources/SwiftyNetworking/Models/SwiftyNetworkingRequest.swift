@@ -74,7 +74,7 @@ public struct SwiftyNetworkingRequest: Identifiable, Hashable, Sendable {
         components.scheme = scheme.rawValue
         components.host = host
         components.path = path.first == "/" ? path : "/" + path
-        components.queryItems = parameters.reduce(into: [URLQueryItem]()) { result, item in
+        components.queryItems = parameters.isEmpty ? nil : parameters.reduce(into: [URLQueryItem]()) { result, item in
             result.append(URLQueryItem(name: item.key, value: item.value))
         }
         
