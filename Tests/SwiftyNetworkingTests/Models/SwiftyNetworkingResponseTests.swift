@@ -24,9 +24,9 @@ final class SwiftyNetworkingResponseTests: XCTestCase {
     }
     
     func testDuration() async throws {
-        let request = SwiftyNetworkingRequest(
-            endpoint: "https://httpbin.org",
-            path: "get",
+        let url = try XCTUnwrap(URL(string: "https://httpbin.org/get"))
+        let request = try SwiftyNetworkingRequest(
+            url: url,
             method: .get,
             cachePolicy: .reloadIgnoringCacheData
         )

@@ -33,18 +33,18 @@ public extension SwiftyNetworkingRouter {
     }
 }
 
-extension SwiftyNetworkingRouter {
-    typealias RawValue = SwiftyNetworkingRequest
-    
-    var rawValue: RawValue {
-        SwiftyNetworkingRequest(
-            endpoint: endpoint,
-            path: path,
-            parameters: parameters, method: method,
-            headers: headers,
-            body: body,
-            cachePolicy: cachePolicy,
-            timeout: timeout
-        )
-    }
-}
+//extension SwiftyNetworkingRouter {
+//    typealias RawValue = SwiftyNetworkingRequest
+//    
+//    var rawValue: RawValue {
+//        SwiftyNetworkingRequest(
+//            endpoint: endpoint,
+//            path: path,
+//            parameters: parameters, method: method,
+//            headers: headers,
+//            body: body,
+//            cachePolicy: cachePolicy,
+//            timeout: timeout
+//        )
+//    }
+//}
