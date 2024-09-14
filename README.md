@@ -94,7 +94,7 @@ In a context where the app makes numerous requests of different types to the sam
       case user(id: Int)
     
       var host: String {
-         "https://jsonplaceholder.typicode.com"
+         "jsonplaceholder.typicode.com"
       }
 
       var path: String {
