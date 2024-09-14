@@ -22,13 +22,17 @@ public struct SwiftyNetworkingRequest: Identifiable, Hashable, Sendable {
         
     public init(
         id: UUID = UUID(),
-        url: URL,
+        url: URL?,
         method: Method = .get,
         headers: [String : String] = [:],
         body: Data? = nil,
         cachePolicy: CachePolicy = .returnCacheDataElseLoad,
         timeout: TimeInterval = 60
     ) throws {
+        guard let url else {
+            throw URLError(.badURL)
+        }
+        
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
             throw URLError(.badURL)
         }
@@ -57,7 +61,7 @@ public struct SwiftyNetworkingRequest: Identifiable, Hashable, Sendable {
         self.cachePolicy = cachePolicy
         self.timeout = timeout
     }
-    
+        
     public init(
         id: UUID = UUID(),
         scheme: Scheme = .https,

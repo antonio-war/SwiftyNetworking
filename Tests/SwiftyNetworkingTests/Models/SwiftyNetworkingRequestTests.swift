@@ -19,6 +19,11 @@ final class SwiftyNetworkingRequestTests: XCTestCase {
         XCTAssertEqual(request.parameters, ["name": "test"])
     }
       
+    func testInitFromUrlWhenUrlIsInvalid() throws {
+        let url = URL(string: "invalid-url")
+        XCTAssertThrowsError(try SwiftyNetworkingRequest(url: url))
+    }
+    
     func testInitFromUrlWhenParametersAreEmpty() throws {
         let url = try XCTUnwrap(URL(string: "https://www.example.com/path"))
         let request = try SwiftyNetworkingRequest(url: url)
@@ -51,6 +56,22 @@ final class SwiftyNetworkingRequestTests: XCTestCase {
         )
         let url = try XCTUnwrap(URL(string: "https://www.example.com/path"))
         XCTAssertEqual(request.url, url)
+    }
+    
+    func testBothInitReturnsTheSameResult() throws {
+        let id = UUID()
+        let firstRequest = try SwiftyNetworkingRequest(
+            id: id,
+            url: URL(string: "https://www.example.com/path?name=test")
+        )
+        let secondRequest = try SwiftyNetworkingRequest(
+            id: id,
+            scheme: .https,
+            host: "www.example.com",
+            path: "path",
+            parameters: ["name": "test"]
+        )
+        XCTAssertEqual(firstRequest, secondRequest)
     }
       
     func testRawValue() throws {
