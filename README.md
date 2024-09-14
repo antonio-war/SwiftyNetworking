@@ -125,6 +125,9 @@ let users = try await networkingClient.send(request, decoding: [JsonPlaceholderU
 
 By default the method uses its own instance of JSONDecoder, however, as shown it is possible to inject a custom decoder if a particular decoding configuration is necessary.
 
+### SwiftUI integration
+
+
 ---
 # Support
 Your generous donations help sustain and improve this project. Here's why supporting us is important:
