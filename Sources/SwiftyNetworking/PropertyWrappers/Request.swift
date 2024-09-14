@@ -26,12 +26,12 @@ public struct Request<Model: Decodable>: DynamicProperty {
     
     public init(
         url: URL?,
-        method: Method,
-        headers: [String : String],
-        body: Data?,
-        cachePolicy: CachePolicy,
-        timeout: TimeInterval,
-        decoder: JSONDecoder
+        method: Method = .get,
+        headers: [String : String] = [:],
+        body: Data? = nil,
+        cachePolicy: CachePolicy = .returnCacheDataElseLoad,
+        timeout: TimeInterval = 60,
+        decoder: JSONDecoder = JSONDecoder()
     ) {
         self.url = url
         self.method = method
@@ -44,12 +44,12 @@ public struct Request<Model: Decodable>: DynamicProperty {
     
     public init(
         url: String,
-        method: Method,
-        headers: [String : String],
-        body: Data?,
-        cachePolicy: CachePolicy,
-        timeout: TimeInterval,
-        decoder: JSONDecoder
+        method: Method = .get,
+        headers: [String : String] = [:],
+        body: Data? = nil,
+        cachePolicy: CachePolicy = .returnCacheDataElseLoad,
+        timeout: TimeInterval = 60,
+        decoder: JSONDecoder = JSONDecoder()
     ) {
         self.init(
             url: URL(
