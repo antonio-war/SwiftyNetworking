@@ -40,22 +40,20 @@ The main steps for using SwiftyNetworking into your project are outlined below, 
 
 ### Request definition
 First, define a `SwiftyNetworkingRequest` which is a simple wrapper around `URLRequest` which allows you to easily set up everything you need to make an API call.
-Such as the classics method, headers and query parameters, but also some parameters closely linked to the iOS ecosystem such as cache policy or timeout management.
+Such as the classics method, headers and body, but also some parameters closely linked to the iOS ecosystem such as cache policy or timeout management.
 
 ```swift
-   let request = SwiftyNetworkingRequest(
-      endpoint: "https://jsonplaceholder.typicode.com",
-      path: "comments",
-      parameters: ["postId": "1"],
-      method: .get,
-      headers: [:],
-      body: nil,
-      cachePolicy: .reloadIgnoringCacheData,
-      timeout: 60
+   let request = try SwiftyNetworkingRequest(
+         url: URL(string: "https://jsonplaceholder.typicode.com"),
+         method: .get,
+         headers: [:],
+         body: nil,
+         cachePolicy: .reloadIgnoringCacheData,
+         timeout: 60
    )
 ```
 
-Alternatively, you can initialize the request directly with a valid URL, without manually specifying endpoints, path and parameters.
+Alternatively, you can initialize the request specifying host, path and parameters without defining an URL.
 
 ### Client creation
 Create a `SwiftyNetworkingClient` instance using the default or a custom URLSessionConfiguration.
@@ -95,8 +93,8 @@ In a context where the app makes numerous requests of different types to the sam
       case users
       case user(id: Int)
     
-      var endpoint: String {
-         "https://jsonplaceholder.typicode.com"
+      var host: String {
+         "jsonplaceholder.typicode.com"
       }
 
       var path: String {
@@ -113,7 +111,7 @@ In a context where the app makes numerous requests of different types to the sam
 Making a request to one of the exposed routes will be really easy!
 
 ```swift
-   let request = JsonPlaceholderRouter.users
+   let request = try JsonPlaceholderRouter.users.request
    let response = try await client.send(request)
 ```
 
@@ -121,10 +119,27 @@ Making a request to one of the exposed routes will be really easy!
 In most cases once you make a network call you need to read the contents of the response body, obviously in the iOS environment this is achieved using the power of the Decodable protocol and its Decoder, that's why SwiftyNetworking also provides methods with integrated decoding. They are very useful when the decoding operation must be done in a simple way, without any custom behavior, SwiftyNetworking will relieve you of any responsibility.
 
 ```swift
-let users = try await networkingClient.send(JsonPlaceholderRouter.users, decoding: [JsonPlaceholderUser].self, using: JSONDecoder())
+let request = try JsonPlaceholderRouter.users.request
+let users = try await networkingClient.send(request, decoding: [JsonPlaceholderUser].self, using: JSONDecoder())
 ```
 
 By default the method uses its own instance of JSONDecoder, however, as shown it is possible to inject a custom decoder if a particular decoding configuration is necessary.
+
+### SwiftUI integration
+SwiftyNetworking was born to be a modern framework and for this reason it is oriented towards development with SwiftUI.
+The `Request` property wrapper allows you to make a network request and decode the response directly within your views, without having to write any code.
+It is inspired by SwiftData's @Query to provide the user with a familiar interface.
+
+```swift
+   @Request(url: "https://jsonplaceholder.typicode.com/posts")
+   var posts: [Post]?
+    
+   @Request(url: "https://jsonplaceholder.typicode.com/posts/1")
+   var post: Post?
+```
+
+The request is executed automatically as soon as the view is created, so you can directly access your object inside the body.
+If there is an error, the object will be nil.
 
 ---
 # Support
