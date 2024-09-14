@@ -126,7 +126,19 @@ let users = try await networkingClient.send(request, decoding: [JsonPlaceholderU
 By default the method uses its own instance of JSONDecoder, however, as shown it is possible to inject a custom decoder if a particular decoding configuration is necessary.
 
 ### SwiftUI integration
+SwiftyNetworking was born to be a modern framework and for this reason it is oriented towards development with SwiftUI.
+The `Request` property wrapper allows you to make a network request and decode the response directly within your views, without having to write any code.
 
+```swift
+   @Request(url: "https://jsonplaceholder.typicode.com/posts")
+   var posts: [Post]?
+    
+   @Request(url: "https://jsonplaceholder.typicode.com/posts/1")
+   var post: Post?
+```
+
+The request is executed automatically as soon as the view is created, so you can directly access your object inside the body.
+If there is an error, the object will be nil.
 
 ---
 # Support
