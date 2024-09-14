@@ -21,8 +21,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
     }
     
     func testSendDeleteRequest() async throws {
-        let request = SwiftyNetworkingRequest(
-            endpoint: "https://httpbin.org",
+        let request = try SwiftyNetworkingRequest(
+            host: "httpbin.org",
             path: "delete",
             method: .delete,
             cachePolicy: .reloadIgnoringCacheData
@@ -36,8 +36,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
     }
     
     func testSendGetRequest() async throws {
-        let request = SwiftyNetworkingRequest(
-            endpoint: "https://httpbin.org",
+        let request = try SwiftyNetworkingRequest(
+            host: "httpbin.org",
             path: "get",
             method: .get,
             cachePolicy: .reloadIgnoringCacheData
@@ -51,8 +51,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
     }
     
     func testSendGetRequestWhenParametersAreNotEmpty() async throws {
-        let request = SwiftyNetworkingRequest(
-            endpoint: "https://jsonplaceholder.typicode.com",
+        let request = try SwiftyNetworkingRequest(
+            host: "jsonplaceholder.typicode.com",
             path: "comments",
             parameters: ["postId": "1"], 
             method: .get,
@@ -67,8 +67,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
     }
     
     func testSendGetRequestWhenCacheIsEnabled() async throws {
-        let firstRequest = SwiftyNetworkingRequest(
-            endpoint: "https://jsonplaceholder.typicode.com",
+        let firstRequest = try SwiftyNetworkingRequest(
+            host: "jsonplaceholder.typicode.com",
             path: "todos/1",
             method: .get,
             cachePolicy: .reloadIgnoringCacheData
@@ -77,8 +77,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
         let firstDuration = try XCTUnwrap(firstResponse.duration)
         XCTAssertEqual(firstResponse.fetchType, .networkLoad)
         
-        let secondRequest = SwiftyNetworkingRequest(
-            endpoint: "https://jsonplaceholder.typicode.com",
+        let secondRequest = try SwiftyNetworkingRequest(
+            host: "jsonplaceholder.typicode.com",
             path: "todos/1",
             method: .get,
             cachePolicy: .returnCacheDataElseLoad
@@ -90,8 +90,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
     }
     
     func testSendGetRequestWhenStatusIsRedirection() async throws {
-        let request = SwiftyNetworkingRequest(
-            endpoint: "https://httpbin.org",
+        let request = try SwiftyNetworkingRequest(
+            host: "httpbin.org",
             path: "status/300",
             cachePolicy: .reloadIgnoringCacheData
         )
@@ -104,8 +104,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
     }
     
     func testSendGetRequestWhenStatusIsClientError() async throws {
-        let request = SwiftyNetworkingRequest(
-            endpoint: "https://httpbin.org",
+        let request = try SwiftyNetworkingRequest(
+            host: "httpbin.org",
             path: "status/400",
             cachePolicy: .reloadIgnoringCacheData
         )
@@ -118,8 +118,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
     }
     
     func testSendGetRequestWhenStatusIsServerError() async throws {
-        let request = SwiftyNetworkingRequest(
-            endpoint: "https://httpbin.org",
+        let request = try SwiftyNetworkingRequest(
+            host: "httpbin.org",
             path: "status/500",
             cachePolicy: .reloadIgnoringCacheData
         )
@@ -132,8 +132,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
     }
     
     func testSendGetRequestWhenStatusIsInvalid() async throws {
-        let request = SwiftyNetworkingRequest(
-            endpoint: "https://httpbin.org",
+        let request = try SwiftyNetworkingRequest(
+            host: "httpbin.org",
             path: "status/600",
             cachePolicy: .reloadIgnoringCacheData
         )
@@ -146,8 +146,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
     }
     
     func testSendGetRequestWhenUrlIsInvalid() async throws {
-        let request = SwiftyNetworkingRequest(
-            endpoint: "http://valid-endpoint",
+        let request = try SwiftyNetworkingRequest(
+            host: "valid-endpoint",
             path: "valid-path",
             cachePolicy: .reloadIgnoringLocalCacheData
         )
@@ -155,8 +155,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
     }
     
     func testSendGetRequestWithDecoding() async throws {
-        let request = SwiftyNetworkingRequest(
-            endpoint: "https://jsonplaceholder.typicode.com",
+        let request = try SwiftyNetworkingRequest(
+            host: "jsonplaceholder.typicode.com",
             path: "/users",
             cachePolicy: .reloadIgnoringCacheData
         )
@@ -165,8 +165,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
     }
     
     func testSendGetRequestWithDecodingWhenStatusIsInvalid() async throws {
-        let request = SwiftyNetworkingRequest(
-            endpoint: "https://httpbin.org",
+        let request = try SwiftyNetworkingRequest(
+            host: "httpbin.org",
             path: "status/600",
             cachePolicy: .reloadIgnoringCacheData
         )
@@ -174,8 +174,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
     }
     
     func testSendGetRequestWithDecodingWhenModelIsInvalid() async throws {
-        let request = SwiftyNetworkingRequest(
-            endpoint: "https://jsonplaceholder.typicode.com",
+        let request = try SwiftyNetworkingRequest(
+            host: "jsonplaceholder.typicode.com",
             path: "/users",
             cachePolicy: .reloadIgnoringCacheData
         )
@@ -183,7 +183,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
     }
     
     func testSendGetRequestUsingRouter() async throws {
-        let response = try await networkingClient.send(JsonPlaceholderRouter.users)
+        let request = try JsonPlaceholderRouter.users.request
+        let response = try await networkingClient.send(request)
         XCTAssertEqual(response.code, 200)
         XCTAssertEqual(response.status, .success)
         XCTAssertEqual(response.fetchType, .networkLoad)
@@ -192,13 +193,14 @@ final class SwiftyNetworkingClientTests: XCTestCase {
     }
     
     func testSendGetRequestWithDecodingUsingRouter() async throws {
-        let users = try await networkingClient.send(JsonPlaceholderRouter.users, decoding: [JsonPlaceholderUser].self)
+        let request = try JsonPlaceholderRouter.users.request
+        let users = try await networkingClient.send(request, decoding: [JsonPlaceholderUser].self)
         XCTAssertFalse(users.isEmpty)
     }
     
     func testSendPatchRequest() async throws {
-        let request = SwiftyNetworkingRequest(
-            endpoint: "https://httpbin.org",
+        let request = try SwiftyNetworkingRequest(
+            host: "httpbin.org",
             path: "patch",
             method: .patch,
             cachePolicy: .reloadIgnoringCacheData
@@ -212,8 +214,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
     }
     
     func testSendPostRequest() async throws {
-        let request = SwiftyNetworkingRequest(
-            endpoint: "https://httpbin.org",
+        let request = try SwiftyNetworkingRequest(
+            host: "httpbin.org",
             path: "post",
             method: .post,
             cachePolicy: .reloadIgnoringCacheData
@@ -227,8 +229,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
     }
     
     func testSendPutRequest() async throws {
-        let request = SwiftyNetworkingRequest(
-            endpoint: "https://httpbin.org",
+        let request = try SwiftyNetworkingRequest(
+            host: "httpbin.org",
             path: "put",
             method: .put,
             cachePolicy: .reloadIgnoringCacheData

@@ -11,8 +11,9 @@ import XCTest
 final class SwiftyNetworkingRouterTests: XCTestCase {
 
     func testRawValueWhenCaseHasNotAssociatedParameters() throws {
-        let request = JsonPlaceholderRouter.users.rawValue
-        XCTAssertEqual(request.endpoint, "https://jsonplaceholder.typicode.com")
+        let request = try JsonPlaceholderRouter.users.request
+        XCTAssertEqual(request.scheme, .https)
+        XCTAssertEqual(request.host, "jsonplaceholder.typicode.com")
         XCTAssertEqual(request.path, "/users/")
         XCTAssertEqual(request.method, .get)
         XCTAssertEqual(request.headers, [:])
@@ -23,8 +24,9 @@ final class SwiftyNetworkingRouterTests: XCTestCase {
     }
     
     func testRawValueWhenCaseHasAssociatedParameters() throws {
-        let request = JsonPlaceholderRouter.user(id: 1).rawValue
-        XCTAssertEqual(request.endpoint, "https://jsonplaceholder.typicode.com")
+        let request = try JsonPlaceholderRouter.user(id: 1).request
+        XCTAssertEqual(request.scheme, .https)
+        XCTAssertEqual(request.host, "jsonplaceholder.typicode.com")
         XCTAssertEqual(request.path, "/users/1")
         XCTAssertEqual(request.method, .get)
         XCTAssertEqual(request.headers, [:])

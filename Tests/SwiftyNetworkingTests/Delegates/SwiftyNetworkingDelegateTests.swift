@@ -32,24 +32,25 @@ final class SwiftyNetworkingDelegateTests: XCTestCase {
     }
     
     func testCacheWhenMetricsAreAvailable() async throws {
-        let request = JsonPlaceholderRouter.users
+        let url = try XCTUnwrap(URL(string: "https://jsonplaceholder.typicode.com/users/"))
+        let request = try SwiftyNetworkingRequest(url: url)
         let response = try await client.send(request)
-        let rawRequest = try request.rawValue.rawValue
         XCTAssertEqual(response.status, .success)
-        XCTAssertNotNil(delegate.fetchType(for: rawRequest))
-        XCTAssertNotNil(delegate.start(for: rawRequest))
-        XCTAssertNotNil(delegate.end(for: rawRequest))
+        XCTAssertNotNil(delegate.fetchType(for: request.rawValue))
+        XCTAssertNotNil(delegate.start(for: request.rawValue))
+        XCTAssertNotNil(delegate.end(for: request.rawValue))
     }
     
     func testCacheIsCleanedWhenTheLimitIsReached() async throws {
-        let firstRequest = JsonPlaceholderRouter.users
-        let firstRawRequest = try firstRequest.rawValue.rawValue
+        let firstUrl = try XCTUnwrap(URL(string: "https://jsonplaceholder.typicode.com/users/"))
+        let firstRequest = try SwiftyNetworkingRequest(url: firstUrl)
         let firstResponse = try await client.send(firstRequest)
-        let secondRequest = JsonPlaceholderRouter.user(id: 1)
+        let secondUrl = try XCTUnwrap(URL(string: "https://jsonplaceholder.typicode.com/users/1"))
+        let secondRequest = try SwiftyNetworkingRequest(url: secondUrl)
         let _ = try await client.send(secondRequest)
         XCTAssertEqual(firstResponse.status, .success)
-        XCTAssertNil(delegate.fetchType(for: firstRawRequest))
-        XCTAssertNil(delegate.start(for: firstRawRequest))
-        XCTAssertNil(delegate.end(for: firstRawRequest))
+        XCTAssertNil(delegate.fetchType(for: firstRequest.rawValue))
+        XCTAssertNil(delegate.start(for: firstRequest.rawValue))
+        XCTAssertNil(delegate.end(for: firstRequest.rawValue))
     }
 }

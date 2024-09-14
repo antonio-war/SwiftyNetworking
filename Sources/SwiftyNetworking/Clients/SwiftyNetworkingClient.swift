@@ -20,34 +20,27 @@ public struct SwiftyNetworkingClient {
     }
     
     public func send(_ request: SwiftyNetworkingRequest, completion: @escaping (Result<SwiftyNetworkingResponse, Error>) -> Void) {
-        do {
-            let rawRequest = try request.rawValue
-            
-            let dataTask = session.dataTask(with: rawRequest) { data, response, error in
-                if let error = error {
-                    completion(.failure(error))
-                    return
-                }
-                
-                guard let body = data, let rawResponse = response as? HTTPURLResponse else {
-                    completion(.failure(URLError(.cannotParseResponse)))
-                    return
-                }
-                
-                let response = SwiftyNetworkingResponse(
-                    rawValue: rawResponse,
-                    body: body,
-                    fetchType: delegate.fetchType(for: rawRequest),
-                    start: delegate.start(for: rawRequest),
-                    end: delegate.end(for: rawRequest)
-                )
-                completion(.success(response))
+        let dataTask = session.dataTask(with: request.rawValue) { data, response, error in
+            if let error = error {
+                completion(.failure(error))
+                return
             }
             
-            dataTask.resume()
-        } catch {
-            completion(.failure(error))
+            guard let body = data, let rawResponse = response as? HTTPURLResponse else {
+                completion(.failure(URLError(.cannotParseResponse)))
+                return
+            }
+            
+            let response = SwiftyNetworkingResponse(
+                rawValue: rawResponse,
+                body: body,
+                fetchType: delegate.fetchType(for: request.rawValue),
+                start: delegate.start(for: request.rawValue),
+                end: delegate.end(for: request.rawValue)
+            )
+            completion(.success(response))
         }
+        dataTask.resume()
     }
     
     public func send(_ request: SwiftyNetworkingRequest) async throws -> SwiftyNetworkingResponse {
@@ -94,21 +87,5 @@ public struct SwiftyNetworkingClient {
                 }
             }
         }
-    }
-    
-    public func send(_ router: SwiftyNetworkingRouter, completion: @escaping (Result<SwiftyNetworkingResponse, Error>) -> Void) {
-        send(router.rawValue, completion: completion)
-    }
-    
-    public func send(_ router: SwiftyNetworkingRouter) async throws -> SwiftyNetworkingResponse {
-        try await send(router.rawValue)
-    }
-    
-    public func send<Model: Decodable>(_ router: SwiftyNetworkingRouter, decoding model: Model.Type, using decoder: JSONDecoder = JSONDecoder(), completion: @escaping (Result<Model, Error>) -> Void) {
-        send(router.rawValue, decoding: model, using: decoder, completion: completion)
-    }
-    
-    public func send<Model: Decodable>(_ router: SwiftyNetworkingRouter, decoding model: Model.Type, using decoder: JSONDecoder = JSONDecoder()) async throws -> Model {
-        try await send(router.rawValue, decoding: model, using: decoder)
     }
 }
