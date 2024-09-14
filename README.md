@@ -93,7 +93,7 @@ In a context where the app makes numerous requests of different types to the sam
       case users
       case user(id: Int)
     
-      var endpoint: String {
+      var host: String {
          "https://jsonplaceholder.typicode.com"
       }
 
@@ -111,7 +111,7 @@ In a context where the app makes numerous requests of different types to the sam
 Making a request to one of the exposed routes will be really easy!
 
 ```swift
-   let request = JsonPlaceholderRouter.users
+   let request = try JsonPlaceholderRouter.users.request
    let response = try await client.send(request)
 ```
 
@@ -119,7 +119,8 @@ Making a request to one of the exposed routes will be really easy!
 In most cases once you make a network call you need to read the contents of the response body, obviously in the iOS environment this is achieved using the power of the Decodable protocol and its Decoder, that's why SwiftyNetworking also provides methods with integrated decoding. They are very useful when the decoding operation must be done in a simple way, without any custom behavior, SwiftyNetworking will relieve you of any responsibility.
 
 ```swift
-let users = try await networkingClient.send(JsonPlaceholderRouter.users, decoding: [JsonPlaceholderUser].self, using: JSONDecoder())
+let request = try JsonPlaceholderRouter.users.request
+let users = try await networkingClient.send(request, decoding: [JsonPlaceholderUser].self, using: JSONDecoder())
 ```
 
 By default the method uses its own instance of JSONDecoder, however, as shown it is possible to inject a custom decoder if a particular decoding configuration is necessary.
