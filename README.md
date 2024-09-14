@@ -40,22 +40,20 @@ The main steps for using SwiftyNetworking into your project are outlined below, 
 
 ### Request definition
 First, define a `SwiftyNetworkingRequest` which is a simple wrapper around `URLRequest` which allows you to easily set up everything you need to make an API call.
-Such as the classics method, headers and query parameters, but also some parameters closely linked to the iOS ecosystem such as cache policy or timeout management.
+Such as the classics method, headers and body, but also some parameters closely linked to the iOS ecosystem such as cache policy or timeout management.
 
 ```swift
-   let request = SwiftyNetworkingRequest(
-      endpoint: "https://jsonplaceholder.typicode.com",
-      path: "comments",
-      parameters: ["postId": "1"],
-      method: .get,
-      headers: [:],
-      body: nil,
-      cachePolicy: .reloadIgnoringCacheData,
-      timeout: 60
+   let request = try SwiftyNetworkingRequest(
+         url: URL(string: "https://jsonplaceholder.typicode.com"),
+         method: .get,
+         headers: [:],
+         body: nil,
+         cachePolicy: .reloadIgnoringCacheData,
+         timeout: 60
    )
 ```
 
-Alternatively, you can initialize the request directly with a valid URL, without manually specifying endpoints, path and parameters.
+Alternatively, you can initialize the request specifying host, path and parameters without defining an URL.
 
 ### Client creation
 Create a `SwiftyNetworkingClient` instance using the default or a custom URLSessionConfiguration.
