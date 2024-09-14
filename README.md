@@ -128,6 +128,7 @@ By default the method uses its own instance of JSONDecoder, however, as shown it
 ### SwiftUI integration
 SwiftyNetworking was born to be a modern framework and for this reason it is oriented towards development with SwiftUI.
 The `Request` property wrapper allows you to make a network request and decode the response directly within your views, without having to write any code.
+It is inspired by SwiftData's @Query to provide the user with a familiar interface.
 
 ```swift
    @Request(url: "https://jsonplaceholder.typicode.com/posts")
