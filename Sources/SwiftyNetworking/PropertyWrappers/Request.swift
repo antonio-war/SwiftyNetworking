@@ -15,6 +15,7 @@ public struct Request<Model: Decodable>: DynamicProperty {
     @State private var model: Model?
     @State private var error: Error?
     
+    let client: SwiftyNetworkingClient
     let url: URL?
     let method: Method
     let headers: [String: String]
@@ -22,9 +23,9 @@ public struct Request<Model: Decodable>: DynamicProperty {
     let cachePolicy: CachePolicy
     let timeout: TimeInterval
     let decoder: JSONDecoder
-    let client: SwiftyNetworkingClient = SwiftyNetworkingClient()
     
     public init(
+        client: SwiftyNetworkingClient = SwiftyNetworkingClient(),
         url: URL?,
         method: Method = .get,
         headers: [String : String] = [:],
@@ -33,6 +34,7 @@ public struct Request<Model: Decodable>: DynamicProperty {
         timeout: TimeInterval = 60,
         decoder: JSONDecoder = JSONDecoder()
     ) {
+        self.client = client
         self.url = url
         self.method = method
         self.headers = headers
@@ -43,6 +45,7 @@ public struct Request<Model: Decodable>: DynamicProperty {
     }
     
     public init(
+        client: SwiftyNetworkingClient = SwiftyNetworkingClient(),
         url: String,
         method: Method = .get,
         headers: [String : String] = [:],
@@ -52,6 +55,7 @@ public struct Request<Model: Decodable>: DynamicProperty {
         decoder: JSONDecoder = JSONDecoder()
     ) {
         self.init(
+            client: client,
             url: URL(
                 string: url
             ),
@@ -68,6 +72,10 @@ public struct Request<Model: Decodable>: DynamicProperty {
         model
     }
         
+    private var shouldUpdate: Bool {
+        model == nil || error != nil
+    }
+    
     @MainActor
     func fetch() async {
         do {
@@ -86,13 +94,14 @@ public struct Request<Model: Decodable>: DynamicProperty {
     }
     
     public func update() {
+        guard shouldUpdate else {
+            return
+        }
+        
         Task {
+            self.model = nil
+            self.error = nil
             await fetch()
         }
-    }
-    
-    func reset() {
-        self.model = nil
-        self.error = nil
     }
 }
