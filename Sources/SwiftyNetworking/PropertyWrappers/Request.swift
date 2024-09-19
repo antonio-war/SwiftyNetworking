@@ -12,8 +12,9 @@ import SwiftUI
 @propertyWrapper
 public struct Request<Model: Decodable>: DynamicProperty {
     public typealias Method = SwiftyNetworkingRequest.Method
-    @State private var model: Model?
-    @State private var error: Error?
+    @State private var model: Model? = nil
+    @State private var error: Error? = nil
+    @State private var fetching: Bool = false
     
     let client: SwiftyNetworkingClient
     let url: URL?
@@ -73,12 +74,13 @@ public struct Request<Model: Decodable>: DynamicProperty {
     }
         
     private var shouldUpdate: Bool {
-        model == nil || error != nil
+        model == nil && error == nil && fetching == false
     }
     
     @MainActor
     func fetch() async {
         do {
+            self.fetching = true
             let request = try SwiftyNetworkingRequest(
                 url: url,
                 method: method,
@@ -88,8 +90,10 @@ public struct Request<Model: Decodable>: DynamicProperty {
                 timeout: timeout
             )
             self.model = try await client.send(request, decoding: Model.self, using: decoder)
+            self.fetching = false
         } catch {
             self.error = error
+            self.fetching = false
         }
     }
     
