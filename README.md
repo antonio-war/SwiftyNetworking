@@ -131,16 +131,45 @@ The `Request` property wrapper allows you to make a network request and decode t
 It is inspired by SwiftData's @Query to provide the user with a familiar interface.
 
 ```swift
-   @Request(url: "https://jsonplaceholder.typicode.com/posts")
-   var posts: [Post]?
-    
-   @Request(url: "https://jsonplaceholder.typicode.com/posts/1")
-   var post: Post?
+   @Request(
+        client: SwiftyNetworkingClient(),
+        url: URL(string: "https://jsonplaceholder.typicode.com/posts"),
+        method: .get,
+        headers: ["Content-Type": "application/json"],
+        cachePolicy: .returnCacheDataElseLoad,
+        timeout: 10,
+        decoder: JSONDecoder()
+    )
+    var response: Response<[Post]>
 ```
 
-The request is executed automatically as soon as the view is created, so you can directly access your object inside the body.
-If there is an error, the object will be nil.
+Each request is associated with a Response object which is trivially a three-state enum (loading, success and failure).
 
+The request is executed automatically as soon as the view is created, so you can directly access to the response inside the view body and show a different aspect of the view for each state through a simple switch.
+
+```swift
+List {
+    switch response {
+    case .loading:
+        LoadingCell()
+    case .success(let posts):
+        ForEach(posts, id: \.id) { post in
+            PostCell(post)
+        }
+    case .failure(let error):
+        ErrorCell(error)
+    }
+}
+```
+In case your request failed or you just want to update the result you can use its projectedValue to call the refresh method that will cause the view to be redrawn and the result to be updated.
+
+```swift
+Button("Refresh") {
+    Task {
+        await $response.refresh()
+    }
+}
+```
 ---
 # Support
 Your generous donations help sustain and improve this project. Here's why supporting us is important:
