@@ -148,8 +148,7 @@ Your generous donations help sustain and improve this project. Here's why suppor
 2. **Community Support**: Your contributions show your support for the project and help foster a thriving community around it. Your generosity motivates us to keep pushing the project forward and encourages others to join the cause.
 3. **Open Source Sustainability**: By supporting open-source projects like ours, you're contributing to the sustainability of the entire open-source ecosystem. Your donations help ensure that valuable projects remain accessible to everyone.
 
-Every donation, no matter how small, makes a big difference. Thank you for considering supporting us!<br><br>
-<a href="https://www.buymeacoffee.com/antoniowar" target="_blank"><img src="https://github.com/appcraftstudio/buymeacoffee/raw/master/Images/snapshot-bmc-button.png" alt="Buy Me A Coffee" height="40"></a>
+Every donation, no matter how small, makes a big difference. Thank you for considering supporting us!
 
 ---
 # License
