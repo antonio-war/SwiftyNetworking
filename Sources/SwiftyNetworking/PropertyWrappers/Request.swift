@@ -10,10 +10,9 @@ import Foundation
 import SwiftUI
 
 @propertyWrapper
-public struct Request<Model: Decodable>: DynamicProperty {
+public struct Request<Model: Decodable>: DynamicProperty, Refreshable {
     public typealias Method = SwiftyNetworkingRequest.Method
-    @State private var model: Model? = nil
-    @State private var error: Error? = nil
+    @State private var response: Response<Model> = .loading
     @State private var fetching: Bool = false
     
     let client: SwiftyNetworkingClient
@@ -69,17 +68,25 @@ public struct Request<Model: Decodable>: DynamicProperty {
         )
     }
     
-    public var wrappedValue: Model? {
-        model
+    public var wrappedValue: Response<Model> {
+        response
     }
-        
+    
+    public var projectedValue: Refreshable {
+        self
+    }
+    
     private var shouldUpdate: Bool {
-        model == nil && error == nil && fetching == false
+        switch response {
+        case .loading: !fetching
+        default: false
+        }
     }
     
     @MainActor
     func fetch() async {
         do {
+            self.response = .loading
             self.fetching = true
             let request = try SwiftyNetworkingRequest(
                 url: url,
@@ -89,10 +96,11 @@ public struct Request<Model: Decodable>: DynamicProperty {
                 cachePolicy: cachePolicy,
                 timeout: timeout
             )
-            self.model = try await client.send(request, decoding: Model.self, using: decoder)
+            let model = try await client.send(request, decoding: Model.self, using: decoder)
+            self.response = .success(model)
             self.fetching = false
         } catch {
-            self.error = error
+            self.response = .failure(error)
             self.fetching = false
         }
     }
@@ -103,9 +111,11 @@ public struct Request<Model: Decodable>: DynamicProperty {
         }
         
         Task {
-            self.model = nil
-            self.error = nil
             await fetch()
         }
+    }
+    
+    public func refresh() async {
+        await fetch()
     }
 }
