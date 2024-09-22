@@ -21,6 +21,7 @@ let package = Package(
             dependencies: ["SwiftyNetworking"]),
     ],
     swiftLanguageVersions: [
+        .v5,
         .version("6")
     ]
 )
