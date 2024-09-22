@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 
 @propertyWrapper
-public struct Request<Model: Decodable>: DynamicProperty, Refreshable {
+public struct Request<Model: SwiftyNetworkingModel>: DynamicProperty, Sendable, Refreshable {
     public typealias Method = SwiftyNetworkingRequest.Method
     @State private var response: Response<Model> = .loading
     @State private var fetching: Bool = false

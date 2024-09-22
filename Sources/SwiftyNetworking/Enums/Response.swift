@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum Response<Model: Decodable> {
+public enum Response<Model: SwiftyNetworkingModel>: Sendable {
     case loading
     case success(Model)
     case failure(Error)
