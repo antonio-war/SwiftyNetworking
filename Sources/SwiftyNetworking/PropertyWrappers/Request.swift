@@ -56,9 +56,7 @@ public struct Request<Model: SwiftyNetworkingModel>: DynamicProperty, Sendable, 
     ) {
         self.init(
             client: client,
-            url: URL(
-                string: url
-            ),
+            url: URL(string: url),
             method: method,
             headers: headers,
             body: body,
