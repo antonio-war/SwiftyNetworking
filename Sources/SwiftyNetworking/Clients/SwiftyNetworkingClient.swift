@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct SwiftyNetworkingClient {
+public struct SwiftyNetworkingClient: Sendable {
     private let session: URLSession
     private let delegate: SwiftyNetworkingDelegate
     
@@ -19,7 +19,10 @@ public struct SwiftyNetworkingClient {
         self.delegate = delegate
     }
     
-    public func send(_ request: SwiftyNetworkingRequest, completion: @escaping (Result<SwiftyNetworkingResponse, Error>) -> Void) {
+    public func send(
+        _ request: SwiftyNetworkingRequest,
+        completion: @escaping @Sendable (Result<SwiftyNetworkingResponse, Error>) -> Void
+    ) {
         let dataTask = session.dataTask(with: request.rawValue) { data, response, error in
             if let error = error {
                 completion(.failure(error))
@@ -43,7 +46,9 @@ public struct SwiftyNetworkingClient {
         dataTask.resume()
     }
     
-    public func send(_ request: SwiftyNetworkingRequest) async throws -> SwiftyNetworkingResponse {
+    public func send(
+        _ request: SwiftyNetworkingRequest
+    ) async throws -> SwiftyNetworkingResponse {
         try await withCheckedThrowingContinuation { continuation in
             send(request) { result in
                 switch result {
@@ -56,7 +61,12 @@ public struct SwiftyNetworkingClient {
         }
     }
     
-    public func send<Model: Decodable>(_ request: SwiftyNetworkingRequest, decoding model: Model.Type, using decoder: JSONDecoder = JSONDecoder(), completion: @escaping (Result<Model, Error>) -> Void) {
+    public func send<Model: SwiftyNetworkingModel>(
+        _ request: SwiftyNetworkingRequest,
+        decoding model: Model.Type,
+        using decoder: JSONDecoder = JSONDecoder(),
+        completion: @escaping @Sendable (Result<Model, Error>) -> Void
+    ) {
         send(request) { result in
             do {
                 switch result {
@@ -76,7 +86,11 @@ public struct SwiftyNetworkingClient {
         }
     }
     
-    public func send<Model: Decodable>(_ request: SwiftyNetworkingRequest, decoding model: Model.Type, using decoder: JSONDecoder = JSONDecoder()) async throws -> Model {
+    public func send<Model: SwiftyNetworkingModel>(
+        _ request: SwiftyNetworkingRequest,
+        decoding model: Model.Type,
+        using decoder: JSONDecoder = JSONDecoder()
+    ) async throws -> Model {
         try await withCheckedThrowingContinuation { continuation in
             send(request, decoding: model, using: decoder) { result in
                 switch result {
