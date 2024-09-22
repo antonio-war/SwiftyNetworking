@@ -27,11 +27,24 @@ import Testing
         let request = try JsonPlaceholderRouter.user(id: id).request
         #expect(request.scheme == .https)
         #expect(request.host == "jsonplaceholder.typicode.com")
-        #expect(request.path == "/users/\(id)")
+        #expect(request.path == "/users/\(id)/")
         #expect(request.method == .get)
         #expect(request.headers == [:])
         #expect(request.body == nil)
         #expect(request.parameters == [:])
+        #expect(request.cachePolicy == .reloadIgnoringLocalCacheData)
+        #expect(request.timeout == 60)
+    }
+    
+    @Test(arguments: [1, 2, 3]) func requestIsSuccessfullyInitializedWhenThereAreParameters(_ userId: Int) throws {
+        let request = try JsonPlaceholderRouter.posts(userId: userId).request
+        #expect(request.scheme == .https)
+        #expect(request.host == "jsonplaceholder.typicode.com")
+        #expect(request.path == "/posts/")
+        #expect(request.method == .get)
+        #expect(request.headers == [:])
+        #expect(request.body == nil)
+        #expect(request.parameters == ["userId": "\(userId)"])
         #expect(request.cachePolicy == .reloadIgnoringLocalCacheData)
         #expect(request.timeout == 60)
     }
