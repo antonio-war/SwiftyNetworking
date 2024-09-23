@@ -5,35 +5,30 @@
 //  Created by Antonio Guerra on 06/08/24.
 //
 
+import Foundation
 @testable import SwiftyNetworking
-import XCTest
+import Testing
 
-final class SwiftyNetworkingResponseTests: XCTestCase {
+@Suite struct SwiftyNetworkingResponseTests {
+
+    let delegate: SwiftyNetworkingDelegate
+    let client: SwiftyNetworkingClient
     
-    var delegate: SwiftyNetworkingDelegate!
-    var client: SwiftyNetworkingClient!
-    
-    override func setUpWithError() throws {
-        delegate = SwiftyNetworkingDelegate(cache: NSCache(countLimit: 1))
-        client = SwiftyNetworkingClient(configuration: .default, delegate: delegate)
+    init() {
+        self.delegate = SwiftyNetworkingDelegate(cache: NSCache(countLimit: 1))
+        self.client = SwiftyNetworkingClient(configuration: .default, delegate: delegate)
     }
     
-    override func tearDownWithError() throws {
-        delegate = nil
-        client = nil
-    }
-    
-    func testDuration() async throws {
-        let url = try XCTUnwrap(URL(string: "https://httpbin.org/get"))
+    @Test func durationIsSuccessfullyInitialized() async throws {
         let request = try SwiftyNetworkingRequest(
-            url: url,
+            url: URL(string: "https://httpbin.org/get"),
             method: .get,
             cachePolicy: .reloadIgnoringCacheData
         )
         let response = try await client.send(request)
-        let start = try XCTUnwrap(response.start)
-        let end = try XCTUnwrap(response.end)
-        let duration = try XCTUnwrap(response.duration)
-        XCTAssertEqual(duration, end.timeIntervalSince(start))
+        let start = try #require(response.start)
+        let end = try #require(response.end)
+        let duration = try #require(response.duration)
+        #expect(duration == end.timeIntervalSince(start))
     }
 }
