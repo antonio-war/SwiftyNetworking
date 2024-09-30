@@ -11,6 +11,7 @@ import Foundation
 enum JsonPlaceholderRouter: SwiftyNetworkingRouter {
     case users
     case user(id: Int)
+    case posts(userId: Int)
     
     var host: String {
         "jsonplaceholder.typicode.com"
@@ -21,7 +22,20 @@ enum JsonPlaceholderRouter: SwiftyNetworkingRouter {
         case .users:
             "users/"
         case .user(let id):
-            "users/\(id)"
+            "users/\(id)/"
+        case .posts:
+            "posts/"
+        }
+    }
+    
+    var parameters: [String : String] {
+        switch self {
+        case .users:
+            [:]
+        case .user:
+            [:]
+        case .posts(let userId):
+            ["userId": "\(userId)"]
         }
     }
     

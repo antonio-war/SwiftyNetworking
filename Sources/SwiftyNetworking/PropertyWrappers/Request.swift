@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 
 @propertyWrapper
-public struct Request<Model: Decodable>: DynamicProperty, Refreshable {
+public struct Request<Model: SwiftyNetworkingModel>: DynamicProperty, Sendable, Refreshable {
     public typealias Method = SwiftyNetworkingRequest.Method
     @State private var response: Response<Model> = .loading
     @State private var fetching: Bool = false
@@ -56,9 +56,7 @@ public struct Request<Model: Decodable>: DynamicProperty, Refreshable {
     ) {
         self.init(
             client: client,
-            url: URL(
-                string: url
-            ),
+            url: URL(string: url),
             method: method,
             headers: headers,
             body: body,
@@ -115,6 +113,7 @@ public struct Request<Model: Decodable>: DynamicProperty, Refreshable {
         }
     }
     
+    @MainActor
     public func refresh() async {
         await fetch()
     }

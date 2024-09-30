@@ -19,5 +19,9 @@ let package = Package(
         .testTarget(
             name: "SwiftyNetworkingTests",
             dependencies: ["SwiftyNetworking"]),
+    ],
+    swiftLanguageVersions: [
+        .v5,
+        .version("6")
     ]
 )

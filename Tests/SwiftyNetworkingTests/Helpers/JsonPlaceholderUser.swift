@@ -6,8 +6,9 @@
 //
 
 import Foundation
+@testable import SwiftyNetworking
 
-struct JsonPlaceholderUser: Identifiable, Decodable {
+struct JsonPlaceholderUser: Identifiable, SwiftyNetworkingModel {
     var id: Int
     var name: String
 }

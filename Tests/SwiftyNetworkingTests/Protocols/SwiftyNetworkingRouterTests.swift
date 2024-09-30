@@ -6,33 +6,46 @@
 //
 
 @testable import SwiftyNetworking
-import XCTest
+import Testing
 
-final class SwiftyNetworkingRouterTests: XCTestCase {
-
-    func testRawValueWhenCaseHasNotAssociatedParameters() throws {
+@Suite struct SwiftyNetworkingRouterTests {
+    
+    @Test func requestIsSuccessfullyInitializedWhenPathIsStatic() throws {
         let request = try JsonPlaceholderRouter.users.request
-        XCTAssertEqual(request.scheme, .https)
-        XCTAssertEqual(request.host, "jsonplaceholder.typicode.com")
-        XCTAssertEqual(request.path, "/users/")
-        XCTAssertEqual(request.method, .get)
-        XCTAssertEqual(request.headers, [:])
-        XCTAssertEqual(request.body, nil)
-        XCTAssertEqual(request.parameters, [:])
-        XCTAssertEqual(request.cachePolicy, .reloadIgnoringLocalCacheData)
-        XCTAssertEqual(request.timeout, 60)
+        #expect(request.scheme == .https)
+        #expect(request.host == "jsonplaceholder.typicode.com")
+        #expect(request.path == "/users/")
+        #expect(request.method == .get)
+        #expect(request.headers == [:])
+        #expect(request.body == nil)
+        #expect(request.parameters == [:])
+        #expect(request.cachePolicy == .reloadIgnoringLocalCacheData)
+        #expect(request.timeout == 60)
     }
     
-    func testRawValueWhenCaseHasAssociatedParameters() throws {
-        let request = try JsonPlaceholderRouter.user(id: 1).request
-        XCTAssertEqual(request.scheme, .https)
-        XCTAssertEqual(request.host, "jsonplaceholder.typicode.com")
-        XCTAssertEqual(request.path, "/users/1")
-        XCTAssertEqual(request.method, .get)
-        XCTAssertEqual(request.headers, [:])
-        XCTAssertEqual(request.body, nil)
-        XCTAssertEqual(request.parameters, [:])
-        XCTAssertEqual(request.cachePolicy, .reloadIgnoringLocalCacheData)
-        XCTAssertEqual(request.timeout, 60)
+    @Test(arguments: [1, 2, 3]) func requestIsSuccessfullyInitializedWhenPathIsDynamic(_ id: Int) throws {
+        let request = try JsonPlaceholderRouter.user(id: id).request
+        #expect(request.scheme == .https)
+        #expect(request.host == "jsonplaceholder.typicode.com")
+        #expect(request.path == "/users/\(id)/")
+        #expect(request.method == .get)
+        #expect(request.headers == [:])
+        #expect(request.body == nil)
+        #expect(request.parameters == [:])
+        #expect(request.cachePolicy == .reloadIgnoringLocalCacheData)
+        #expect(request.timeout == 60)
+    }
+    
+    @Test(arguments: [1, 2, 3]) func requestIsSuccessfullyInitializedWhenThereAreParameters(_ userId: Int) throws {
+        let request = try JsonPlaceholderRouter.posts(userId: userId).request
+        #expect(request.scheme == .https)
+        #expect(request.host == "jsonplaceholder.typicode.com")
+        #expect(request.path == "/posts/")
+        #expect(request.method == .get)
+        #expect(request.headers == [:])
+        #expect(request.body == nil)
+        #expect(request.parameters == ["userId": "\(userId)"])
+        #expect(request.cachePolicy == .reloadIgnoringLocalCacheData)
+        #expect(request.timeout == 60)
     }
 }

@@ -6,67 +6,62 @@
 //
 
 @testable import SwiftyNetworking
-import XCTest
+import Testing
 
-final class SwiftyNetworkingClientTests: XCTestCase {
+@Suite struct SwiftyNetworkingClientTests {
+    let networkingClient: SwiftyNetworkingClient
     
-    var networkingClient: SwiftyNetworkingClient!
-    
-    override func setUpWithError() throws {
-        networkingClient = SwiftyNetworkingClient()
+    init() {
+        self.networkingClient = SwiftyNetworkingClient()
     }
     
-    override func tearDownWithError() throws {
-        networkingClient = nil
-    }
-    
-    func testSendDeleteRequest() async throws {
+    @Test func sendDeleteRequest() async throws {
         let request = try SwiftyNetworkingRequest(
-            host: "httpbin.org",
+            host: "www.httpbin.org",
             path: "delete",
             method: .delete,
             cachePolicy: .reloadIgnoringCacheData
         )
         let response = try await networkingClient.send(request)
-        XCTAssertEqual(response.code, 200)
-        XCTAssertEqual(response.status, .success)
-        XCTAssertEqual(response.fetchType, .networkLoad)
-        XCTAssertFalse(response.body.isEmpty)
-        XCTAssertFalse(response.headers.isEmpty)
+        #expect(response.code == 200)
+        #expect(response.status == .success)
+        #expect(response.fetchType == .networkLoad)
+        #expect(!response.body.isEmpty)
+        #expect(!response.headers.isEmpty)
     }
     
-    func testSendGetRequest() async throws {
+    @Test func sendGetRequest() async throws {
         let request = try SwiftyNetworkingRequest(
-            host: "httpbin.org",
+            host: "www.httpbin.org",
             path: "get",
             method: .get,
             cachePolicy: .reloadIgnoringCacheData
         )
         let response = try await networkingClient.send(request)
-        XCTAssertEqual(response.code, 200)
-        XCTAssertEqual(response.status, .success)
-        XCTAssertEqual(response.fetchType, .networkLoad)
-        XCTAssertFalse(response.body.isEmpty)
-        XCTAssertFalse(response.headers.isEmpty)
+        #expect(response.code == 200)
+        #expect(response.status == .success)
+        #expect(response.fetchType == .networkLoad)
+        #expect(!response.body.isEmpty)
+        #expect(!response.headers.isEmpty)
     }
-    
-    func testSendGetRequestWhenParametersAreNotEmpty() async throws {
+
+    @Test func sendGetRequestWhenParametersAreNotEmpty() async throws {
         let request = try SwiftyNetworkingRequest(
             host: "jsonplaceholder.typicode.com",
             path: "comments",
-            parameters: ["postId": "1"], 
+            parameters: ["postId": "1"],
             method: .get,
             cachePolicy: .reloadIgnoringCacheData
         )
         let response = try await networkingClient.send(request)
-        XCTAssertEqual(response.code, 200)
-        XCTAssertEqual(response.status, .success)
-        XCTAssertEqual(response.fetchType, .networkLoad)
-        XCTAssertFalse(response.body.isEmpty)
-        XCTAssertFalse(response.headers.isEmpty)
+        #expect(response.code == 200)
+        #expect(response.status == .success)
+        #expect(response.fetchType == .networkLoad)
+        #expect(!response.body.isEmpty)
+        #expect(!response.headers.isEmpty)
     }
     
-    func testSendGetRequestWhenCacheIsEnabled() async throws {
+    @Test func sendGetRequestWhenCacheIsEnabled() async throws {
         let firstRequest = try SwiftyNetworkingRequest(
             host: "jsonplaceholder.typicode.com",
             path: "todos/1",
@@ -74,8 +69,8 @@ final class SwiftyNetworkingClientTests: XCTestCase {
             cachePolicy: .reloadIgnoringCacheData
         )
         let firstResponse = try await networkingClient.send(firstRequest)
-        let firstDuration = try XCTUnwrap(firstResponse.duration)
-        XCTAssertEqual(firstResponse.fetchType, .networkLoad)
+        let firstDuration = try #require(firstResponse.duration)
+        #expect(firstResponse.fetchType == .networkLoad)
         
         let secondRequest = try SwiftyNetworkingRequest(
             host: "jsonplaceholder.typicode.com",
@@ -84,162 +79,168 @@ final class SwiftyNetworkingClientTests: XCTestCase {
             cachePolicy: .returnCacheDataElseLoad
         )
         let secondResponse = try await networkingClient.send(secondRequest)
-        let secondDuration = try XCTUnwrap(secondResponse.duration)
-        XCTAssertEqual(secondResponse.fetchType, .localCache)
-        XCTAssertLessThanOrEqual(secondDuration, firstDuration)
+        let secondDuration = try #require(secondResponse.duration)
+        #expect(secondResponse.fetchType == .localCache)
+        #expect(secondDuration <= firstDuration)
     }
     
-    func testSendGetRequestWhenStatusIsRedirection() async throws {
+    @Test func sendGetRequestWhenStatusIsRedirection() async throws {
         let request = try SwiftyNetworkingRequest(
-            host: "httpbin.org",
+            host: "www.httpbin.org",
             path: "status/300",
             cachePolicy: .reloadIgnoringCacheData
         )
         let response = try await networkingClient.send(request)
-        XCTAssertEqual(response.code, 300)
-        XCTAssertEqual(response.status, .redirection)
-        XCTAssertEqual(response.fetchType, .networkLoad)
-        XCTAssertTrue(response.body.isEmpty)
-        XCTAssertFalse(response.headers.isEmpty)
+        #expect(response.code == 300)
+        #expect(response.status == .redirection)
+        #expect(response.fetchType == .networkLoad)
+        #expect(response.body.isEmpty)
+        #expect(!response.headers.isEmpty)
     }
-    
-    func testSendGetRequestWhenStatusIsClientError() async throws {
+
+    @Test func sendGetRequestWhenStatusIsClientError() async throws {
         let request = try SwiftyNetworkingRequest(
-            host: "httpbin.org",
+            host: "www.httpbin.org",
             path: "status/400",
             cachePolicy: .reloadIgnoringCacheData
         )
         let response = try await networkingClient.send(request)
-        XCTAssertEqual(response.code, 400)
-        XCTAssertEqual(response.status, .clientError)
-        XCTAssertEqual(response.fetchType, .networkLoad)
-        XCTAssertTrue(response.body.isEmpty)
-        XCTAssertFalse(response.headers.isEmpty)
+        #expect(response.code == 400)
+        #expect(response.status == .clientError)
+        #expect(response.fetchType == .networkLoad)
+        #expect(response.body.isEmpty)
+        #expect(!response.headers.isEmpty)
     }
     
-    func testSendGetRequestWhenStatusIsServerError() async throws {
+    @Test func sendGetRequestWhenStatusIsServerError() async throws {
         let request = try SwiftyNetworkingRequest(
-            host: "httpbin.org",
+            host: "www.httpbin.org",
             path: "status/500",
             cachePolicy: .reloadIgnoringCacheData
         )
         let response = try await networkingClient.send(request)
-        XCTAssertEqual(response.code, 500)
-        XCTAssertEqual(response.status, .serverError)
-        XCTAssertEqual(response.fetchType, .networkLoad)
-        XCTAssertTrue(response.body.isEmpty)
-        XCTAssertFalse(response.headers.isEmpty)
+        #expect(response.code == 500)
+        #expect(response.status == .serverError)
+        #expect(response.fetchType == .networkLoad)
+        #expect(response.body.isEmpty)
+        #expect(!response.headers.isEmpty)
     }
-    
-    func testSendGetRequestWhenStatusIsInvalid() async throws {
+
+    @Test func sendGetRequestWhenStatusIsInvalid() async throws {
         let request = try SwiftyNetworkingRequest(
-            host: "httpbin.org",
+            host: "www.httpbin.org",
             path: "status/600",
             cachePolicy: .reloadIgnoringCacheData
         )
         let response = try await networkingClient.send(request)
-        XCTAssertEqual(response.code, 600)
-        XCTAssertEqual(response.status, .invalid)
-        XCTAssertEqual(response.fetchType, .networkLoad)
-        XCTAssertTrue(response.body.isEmpty)
-        XCTAssertFalse(response.headers.isEmpty)
+        #expect(response.code == 600)
+        #expect(response.status == .invalid)
+        #expect(response.fetchType == .networkLoad)
+        #expect(response.body.isEmpty)
+        #expect(!response.headers.isEmpty)
     }
     
-    func testSendGetRequestWhenUrlIsInvalid() async throws {
+    @Test func sendGetRequestWhenUrlIsInvalid() async throws {
         let request = try SwiftyNetworkingRequest(
             host: "valid-endpoint",
             path: "valid-path",
             cachePolicy: .reloadIgnoringLocalCacheData
         )
-        await XCTAssertThrowsError(try await networkingClient.send(request))
+        await #expect(throws: Error.self) {
+            try await networkingClient.send(request)
+        }
     }
     
-    func testSendGetRequestWithDecoding() async throws {
+    @Test func sendGetRequestWithDecoding() async throws {
         let request = try SwiftyNetworkingRequest(
             host: "jsonplaceholder.typicode.com",
             path: "/users",
             cachePolicy: .reloadIgnoringCacheData
         )
         let users = try await networkingClient.send(request, decoding: [JsonPlaceholderUser].self)
-        XCTAssertFalse(users.isEmpty)
+        #expect(!users.isEmpty)
     }
     
-    func testSendGetRequestWithDecodingWhenStatusIsInvalid() async throws {
+    @Test func sendGetRequestWithDecodingWhenStatusIsInvalid() async throws {
         let request = try SwiftyNetworkingRequest(
-            host: "httpbin.org",
+            host: "www.httpbin.org",
             path: "status/600",
             cachePolicy: .reloadIgnoringCacheData
         )
-        await XCTAssertThrowsError(try await networkingClient.send(request, decoding: [JsonPlaceholderUser].self))
+        await #expect(throws: Error.self) {
+            try await networkingClient.send(request, decoding: [JsonPlaceholderUser].self)
+        }
     }
     
-    func testSendGetRequestWithDecodingWhenModelIsInvalid() async throws {
+    @Test func sendGetRequestWithDecodingWhenModelIsInvalid() async throws {
         let request = try SwiftyNetworkingRequest(
-            host: "jsonplaceholder.typicode.com",
+            host: "www.jsonplaceholder.typicode.com",
             path: "/users",
             cachePolicy: .reloadIgnoringCacheData
         )
-        await XCTAssertThrowsError(try await networkingClient.send(request, decoding: [JsonPlaceholderInvalidUser].self))
+        await #expect(throws: Error.self) {
+            try await networkingClient.send(request, decoding: [JsonPlaceholderInvalidUser].self)
+        }
     }
     
-    func testSendGetRequestUsingRouter() async throws {
+    @Test func sendGetRequestUsingRouter() async throws {
         let request = try JsonPlaceholderRouter.users.request
         let response = try await networkingClient.send(request)
-        XCTAssertEqual(response.code, 200)
-        XCTAssertEqual(response.status, .success)
-        XCTAssertEqual(response.fetchType, .networkLoad)
-        XCTAssertFalse(response.body.isEmpty)
-        XCTAssertFalse(response.headers.isEmpty)
+        #expect(response.code == 200)
+        #expect(response.status == .success)
+        #expect(response.fetchType == .networkLoad)
+        #expect(!response.body.isEmpty)
+        #expect(!response.headers.isEmpty)
     }
     
-    func testSendGetRequestWithDecodingUsingRouter() async throws {
+    @Test func sendGetRequestWithDecodingUsingRouter() async throws {
         let request = try JsonPlaceholderRouter.users.request
         let users = try await networkingClient.send(request, decoding: [JsonPlaceholderUser].self)
-        XCTAssertFalse(users.isEmpty)
+        #expect(!users.isEmpty)
     }
     
-    func testSendPatchRequest() async throws {
+    @Test func sendPatchRequest() async throws {
         let request = try SwiftyNetworkingRequest(
-            host: "httpbin.org",
+            host: "www.httpbin.org",
             path: "patch",
             method: .patch,
             cachePolicy: .reloadIgnoringCacheData
         )
         let response = try await networkingClient.send(request)
-        XCTAssertEqual(response.code, 200)
-        XCTAssertEqual(response.status, .success)
-        XCTAssertEqual(response.fetchType, .networkLoad)
-        XCTAssertFalse(response.body.isEmpty)
-        XCTAssertFalse(response.headers.isEmpty)
+        #expect(response.code == 200)
+        #expect(response.status == .success)
+        #expect(response.fetchType == .networkLoad)
+        #expect(!response.body.isEmpty)
+        #expect(!response.headers.isEmpty)
     }
-    
-    func testSendPostRequest() async throws {
+
+    @Test func sendPostRequest() async throws {
         let request = try SwiftyNetworkingRequest(
-            host: "httpbin.org",
+            host: "www.httpbin.org",
             path: "post",
             method: .post,
             cachePolicy: .reloadIgnoringCacheData
         )
         let response = try await networkingClient.send(request)
-        XCTAssertEqual(response.code, 200)
-        XCTAssertEqual(response.status, .success)
-        XCTAssertEqual(response.fetchType, .networkLoad)
-        XCTAssertFalse(response.body.isEmpty)
-        XCTAssertFalse(response.headers.isEmpty)
+        #expect(response.code == 200)
+        #expect(response.status == .success)
+        #expect(response.fetchType == .networkLoad)
+        #expect(!response.body.isEmpty)
+        #expect(!response.headers.isEmpty)
     }
     
-    func testSendPutRequest() async throws {
+    @Test func sendPutRequest() async throws {
         let request = try SwiftyNetworkingRequest(
-            host: "httpbin.org",
+            host: "www.httpbin.org",
             path: "put",
             method: .put,
             cachePolicy: .reloadIgnoringCacheData
         )
         let response = try await networkingClient.send(request)
-        XCTAssertEqual(response.code, 200)
-        XCTAssertEqual(response.status, .success)
-        XCTAssertEqual(response.fetchType, .networkLoad)
-        XCTAssertFalse(response.body.isEmpty)
-        XCTAssertFalse(response.headers.isEmpty)
+        #expect(response.code == 200)
+        #expect(response.status == .success)
+        #expect(response.fetchType == .networkLoad)
+        #expect(!response.body.isEmpty)
+        #expect(!response.headers.isEmpty)
     }
 }
