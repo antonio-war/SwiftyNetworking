@@ -113,6 +113,7 @@ public struct Request<Model: SwiftyNetworkingModel>: DynamicProperty, Sendable, 
         }
     }
     
+    @MainActor
     public func refresh() async {
         await fetch()
     }
