@@ -124,6 +124,14 @@ let users = try await networkingClient.send(request, decoding: [JsonPlaceholderU
 ```
 
 By default the method uses its own instance of JSONDecoder, however, as shown it is possible to inject a custom decoder if a particular decoding configuration is necessary.
+The model you want to decode must conform to the `SwiftyNetworkingModel` protocol, this ensures compatibility with Swift 6 strict concurrency checking. Here is a simple example of model definition:
+
+```swift
+struct JsonPlaceholderUser: Identifiable, SwiftyNetworkingModel {
+    var id: Int
+    var name: String
+}
+```
 
 ### SwiftUI integration
 SwiftyNetworking was born to be a modern framework and for this reason it is oriented towards development with SwiftUI.
