@@ -7,7 +7,7 @@
 
 import Foundation
 
-public final class NetworkingRequest: Sendable {
+public final class NetworkingRequest: Sendable, RawRepresentable {
     public let url: URL
     public let method: NetworkingMethod
     public let headers: [String: String]
@@ -42,7 +42,7 @@ public final class NetworkingRequest: Sendable {
         self.timeout = rawValue.timeoutInterval
     }
     
-    var rawValue: URLRequest {
+    public var rawValue: URLRequest {
         get {
             var request = URLRequest(url: url, cachePolicy: cachePolicy, timeoutInterval: timeout)
             request.httpMethod = method.rawValue
