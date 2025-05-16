@@ -5,6 +5,7 @@
 //  Created by Antonio Guerra on 16/05/25.
 //
 
+@frozen
 public enum NetworkingResponseStatus: String, Sendable {
     case invalid = "INVALID"
     case information = "INFORMATION"

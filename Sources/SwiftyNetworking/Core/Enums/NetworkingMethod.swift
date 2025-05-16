@@ -5,6 +5,7 @@
 //  Created by Antonio Guerra on 16/05/25.
 //
 
+@frozen
 public enum NetworkingMethod: String, Sendable {
     case connect = "CONNECT"
     case delete = "DELETE"
