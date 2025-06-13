@@ -25,10 +25,10 @@ public struct NetworkingRequest: Sendable, RawRepresentable {
         cachePolicy: NetworkingCachePolicy = .returnCacheDataElseLoad,
         timeout: TimeInterval = 60
     ) {
-        self.url = url
+        self.url = NetworkingRequest.url(url: url)
         self.method = method
         self.headers = headers
-        self.queryParameters = queryParameters
+        self.queryParameters = NetworkingRequest.queryParameters(url: url, queryParameters: queryParameters)
         self.body = body
         self.cachePolicy = cachePolicy
         self.timeout = timeout
@@ -49,6 +49,7 @@ public struct NetworkingRequest: Sendable, RawRepresentable {
     
     public var rawValue: URLRequest {
         get {
+            let url = NetworkingRequest.url(url: url, queryParameters: queryParameters)
             var request = URLRequest(url: url, cachePolicy: cachePolicy.rawValue, timeoutInterval: timeout)
             request.httpMethod = method.rawValue
             request.httpBody = body
@@ -61,6 +62,20 @@ public struct NetworkingRequest: Sendable, RawRepresentable {
         guard let url = rawValue.url else { return nil }
         guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return url }
         components.queryItems = nil
+        guard let url = components.url else { return url }
+        return url
+    }
+    
+    static func url(url: URL) -> URL {
+        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return url }
+        components.queryItems = nil
+        guard let url = components.url else { return url }
+        return url
+    }
+    
+    static func url(url: URL, queryParameters: [String: String]) -> URL {
+        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return url }
+        components.queryItems = queryParameters.map { URLQueryItem(name: $0.key, value: $0.value) }
         guard let url = components.url else { return url }
         return url
     }
@@ -88,6 +103,17 @@ public struct NetworkingRequest: Sendable, RawRepresentable {
         )
     }
     
+    static func queryParameters(url: URL, queryParameters: [String: String]) -> [String: String] {
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return queryParameters }
+        guard let urlParameters = components.queryItems else { return queryParameters }
+        return Dictionary(uniqueKeysWithValues:
+            urlParameters.compactMap { item in
+                guard let value = item.value else { return nil }
+                return (item.name, value)
+            }
+        ).merging(queryParameters, uniquingKeysWith: { _, new in new })
+    }
+    
     static func body(rawValue: URLRequest) -> Data? {
         return rawValue.httpBody
     }
@@ -96,7 +122,7 @@ public struct NetworkingRequest: Sendable, RawRepresentable {
         guard let cachePolicy = NetworkingCachePolicy(rawValue: rawValue.cachePolicy) else { return nil }
         return cachePolicy
     }
-    
+        
     static func timeout(rawValue: URLRequest) -> TimeInterval {
         return rawValue.timeoutInterval
     }
