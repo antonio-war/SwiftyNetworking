@@ -34,17 +34,19 @@ public final class NetworkingRequest: Sendable, RawRepresentable {
     public required init?(rawValue: URLRequest) {
         guard let url = rawValue.url else { return nil }
         guard let rawMethod = rawValue.httpMethod, let method = NetworkingMethod(rawValue: rawMethod) else { return nil }
+        guard let headers = rawValue.allHTTPHeaderFields else { return nil }
+        guard let cachePolicy = NetworkingCachePolicy(rawValue: rawValue.cachePolicy) else { return nil }
         self.url = url
         self.method = method
-        self.headers = rawValue.allHTTPHeaderFields ?? [:]
+        self.headers = headers
         self.body = rawValue.httpBody
-        self.cachePolicy = rawValue.cachePolicy
+        self.cachePolicy = cachePolicy
         self.timeout = rawValue.timeoutInterval
     }
     
     public var rawValue: URLRequest {
         get {
-            var request = URLRequest(url: url, cachePolicy: cachePolicy, timeoutInterval: timeout)
+            var request = URLRequest(url: url, cachePolicy: cachePolicy.rawValue, timeoutInterval: timeout)
             request.httpMethod = method.rawValue
             request.httpBody = body
             request.allHTTPHeaderFields = headers
