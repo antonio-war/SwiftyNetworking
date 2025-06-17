@@ -22,7 +22,7 @@ public struct NetworkingRequest: Sendable, RawRepresentable {
         headers: [String : String] = [:],
         queryParameters: [String: String] = [:],
         body: Data? = nil,
-        cachePolicy: NetworkingCachePolicy = .returnCacheDataElseLoad,
+        cachePolicy: NetworkingCachePolicy = .useProtocolCachePolicy,
         timeout: TimeInterval = 60
     ) {
         self.url = NetworkingRequest.url(url: url)
