@@ -35,16 +35,14 @@ public struct NetworkingRequest: Sendable, RawRepresentable {
     }
         
     public init?(rawValue: URLRequest) {
-        guard let url = NetworkingRequest.url(rawValue: rawValue) else { return nil }
-        guard let method = NetworkingRequest.method(rawValue: rawValue) else { return nil }
-        guard let cachePolicy = NetworkingRequest.cachePolicy(rawValue: rawValue) else { return nil }
-        self.url = url
-        self.method = method
-        self.headers = NetworkingRequest.headers(rawValue: rawValue)
-        self.queryParameters = NetworkingRequest.queryParameters(rawValue: rawValue)
-        self.body = NetworkingRequest.body(rawValue: rawValue)
-        self.cachePolicy = cachePolicy
-        self.timeout = NetworkingRequest.timeout(rawValue: rawValue)
+        guard let builder = NetworkingRequestBuilder(rawValue) else { return nil }
+        self.url = builder.url()
+        self.method = builder.method()
+        self.headers = builder.headers()
+        self.queryParameters = builder.queryParameters()
+        self.body = builder.body()
+        self.cachePolicy = builder.cachePolicy()
+        self.timeout = builder.timeout()
     }
     
     public var rawValue: URLRequest {
