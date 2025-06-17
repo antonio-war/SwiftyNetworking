@@ -46,13 +46,14 @@ public struct NetworkingRequest: Sendable, RawRepresentable {
     }
     
     public var rawValue: URLRequest {
-        get {
-            let url = NetworkingRequest.url(url: url, queryParameters: queryParameters)
-            var request = URLRequest(url: url, cachePolicy: cachePolicy.rawValue, timeoutInterval: timeout)
-            request.httpMethod = method.rawValue
-            request.httpBody = body
-            request.allHTTPHeaderFields = headers
-            return request
-        }
+        let serializer = NetworkingRequestSerializer(self)
+        let url = serializer.url()
+        let cachePolicy = serializer.cachePolicy()
+        let timeoutInterval = serializer.timeoutInterval()
+        var request = URLRequest(url: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
+        request.httpMethod = serializer.httpMethod()
+        request.httpBody = serializer.httpBody()
+        request.allHTTPHeaderFields = serializer.allHTTPHeaderFields()
+        return request
     }
 }

@@ -16,16 +16,16 @@ struct NetworkingRequestBuilder: Sendable {
     private let defaultCachePolicy: URLRequest.CachePolicy
     private let defaultTimeout: TimeInterval
     
-    init?(_ rawValue: URLRequest) {
-        guard let url = rawValue.url else { return nil }
+    init?(_ request: URLRequest) {
+        guard let url = request.url else { return nil }
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return nil }
         self.defaultUrl = url
         self.defaultComponents = components
-        self.defaultMethod = rawValue.httpMethod
-        self.defaultHeaders = rawValue.allHTTPHeaderFields
-        self.defaultBody = rawValue.httpBody
-        self.defaultCachePolicy = rawValue.cachePolicy
-        self.defaultTimeout = rawValue.timeoutInterval
+        self.defaultMethod = request.httpMethod
+        self.defaultHeaders = request.allHTTPHeaderFields
+        self.defaultBody = request.httpBody
+        self.defaultCachePolicy = request.cachePolicy
+        self.defaultTimeout = request.timeoutInterval
     }
     
     func url() -> URL {
