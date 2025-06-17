@@ -7,45 +7,42 @@
 
 import Foundation
 
-struct URLRequestSerializer: Sendable {
-    private let request: NetworkingRequest
+public struct URLRequestSerializer: Sendable {
     
-    init(_ request: NetworkingRequest) {
-        self.request = request
+    public init() {}
+    
+    func serialize(_ request: NetworkingRequest) -> URLRequest {
+        var urlRequest = URLRequest(url: url(request), cachePolicy: cachePolicy(request), timeoutInterval: timeoutInterval(request))
+        urlRequest.httpMethod = httpMethod(request)
+        urlRequest.httpBody = httpBody(request)
+        urlRequest.allHTTPHeaderFields = allHTTPHeaderFields(request)
+        return urlRequest
     }
     
-    func serialize() -> URLRequest {
-        var request = URLRequest(url: url, cachePolicy: cachePolicy, timeoutInterval: timeoutInterval)
-        request.httpMethod = httpMethod
-        request.httpBody = httpBody
-        request.allHTTPHeaderFields = allHTTPHeaderFields
-        return request
-    }
-    
-    private var url: URL {
+    func url(_ request: NetworkingRequest) -> URL {
         guard var components = URLComponents(url: request.url, resolvingAgainstBaseURL: false) else { return request.url }
         components.queryItems = request.queryParameters.map { URLQueryItem(name: $0.key, value: $0.value) }
         guard let url = components.url else { return request.url }
         return url
     }
     
-    private var cachePolicy: URLRequest.CachePolicy {
+    func cachePolicy(_ request: NetworkingRequest) -> URLRequest.CachePolicy {
         return request.cachePolicy.rawValue
     }
-    
-    private var timeoutInterval: TimeInterval {
+
+    func timeoutInterval(_ request: NetworkingRequest) -> TimeInterval {
         return request.timeout
     }
     
-    private var httpMethod: String? {
+    func httpMethod(_ request: NetworkingRequest) -> String? {
         return request.method.rawValue
     }
     
-    private var httpBody: Data? {
+    func httpBody(_ request: NetworkingRequest) -> Data? {
         return request.body
     }
     
-    private var allHTTPHeaderFields: [String: String] {
+    func allHTTPHeaderFields(_ request: NetworkingRequest) -> [String: String] {
         return request.headers
     }
 }

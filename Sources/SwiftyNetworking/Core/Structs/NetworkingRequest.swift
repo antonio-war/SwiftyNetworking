@@ -46,7 +46,9 @@ public struct NetworkingRequest: Sendable, RawRepresentable {
     }
     
     public var rawValue: URLRequest {
-        let serializer = URLRequestSerializer(self)
-        return serializer.serialize()
+        return serializer.serialize(self)
     }
+    
+    private let serializer: URLRequestSerializer = URLRequestSerializer()
+    private let deserializer: URLRequestDeserializer = URLRequestDeserializer()
 }
