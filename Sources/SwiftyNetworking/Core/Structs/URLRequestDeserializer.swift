@@ -46,8 +46,8 @@ struct URLRequestDeserializer: Sendable {
     
     func queryParameters(_ request: URLRequest) -> [String: String]? {
         guard let url = request.url else { return nil }
-        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return nil }
-        guard let queryParameters = components.queryItems else { return [:] }
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return nil }
+        guard let queryParameters = components.queryItems, !queryParameters.isEmpty else { return [:] }
         return Dictionary(uniqueKeysWithValues:
             queryParameters.compactMap { item in
                 guard let value = item.value else { return nil }

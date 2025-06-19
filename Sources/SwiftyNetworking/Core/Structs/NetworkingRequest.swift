@@ -9,12 +9,12 @@ import Foundation
 
 public struct NetworkingRequest: Sendable, RawRepresentable {
     public private(set) var url: URL
-    public let method: NetworkingMethod
+    public var method: NetworkingMethod
     public var headers: [String: String]
     public var queryParameters: [String: String]
     public var body: Data?
-    public let cachePolicy: NetworkingCachePolicy
-    public let timeout: TimeInterval
+    public var cachePolicy: NetworkingCachePolicy
+    public var timeout: TimeInterval
     
     public init(
         url: URL,
@@ -32,7 +32,18 @@ public struct NetworkingRequest: Sendable, RawRepresentable {
         self.body = body
         self.cachePolicy = cachePolicy
         self.timeout = timeout
-        self.cleanUrlAndQueryParameters()
+        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return }
+        guard let queryItems = components.queryItems, !queryItems.isEmpty else { return }
+        let extractedQueryParameters = Dictionary<String, String>(uniqueKeysWithValues:
+            queryItems.compactMap { item in
+                guard let value = item.value else { return nil }
+                return (item.name, value)
+            }
+        )
+        self.queryParameters.merge(extractedQueryParameters) { _, new in new }
+        components.queryItems = nil
+        guard let cleanedUrl = components.url else { return }
+        self.url = cleanedUrl
     }
         
     public init?(rawValue: URLRequest) {
@@ -48,20 +59,6 @@ public struct NetworkingRequest: Sendable, RawRepresentable {
     
     public var rawValue: URLRequest {
         return serializer.serialize(self)
-    }
-    
-    private mutating func cleanUrlAndQueryParameters() {
-        guard var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return }
-        guard let urlQueryParameters = components.queryItems else { return }
-        self.queryParameters =  Dictionary(uniqueKeysWithValues:
-            urlQueryParameters.compactMap { item in
-                guard let value = item.value else { return nil }
-                return (item.name, value)
-            }
-        ).merging(queryParameters, uniquingKeysWith: { _, new in new })
-        components.queryItems = nil
-        guard let url = components.url else { return }
-        self.url = url
     }
     
     private let serializer: URLRequestSerializer = URLRequestSerializer()
