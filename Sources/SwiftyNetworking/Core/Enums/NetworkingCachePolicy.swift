@@ -13,7 +13,6 @@ public enum NetworkingCachePolicy: String, Decodable, RawRepresentable {
     case returnCacheDataElseLoad = "RETURN_CACHE_DATA_ELSE_LOAD"
     case reloadIgnoringCacheData = "RELOAD_IGNORING_CACHE_DATA"
     case reloadRevalidatingCacheData = "RELOAD_REVALIDATING_CACHE_DATA"
-    case useProtocolCachePolicy = "USE_PROTOCOL_CACHE_POLICY"
     
     public init?(rawValue: URLRequest.CachePolicy) {
         switch rawValue {
@@ -21,7 +20,6 @@ public enum NetworkingCachePolicy: String, Decodable, RawRepresentable {
         case .returnCacheDataElseLoad: self = .returnCacheDataElseLoad
         case .returnCacheDataDontLoad: self = .returnCacheDataDontLoad
         case .reloadRevalidatingCacheData: self = .reloadRevalidatingCacheData
-        case .useProtocolCachePolicy: self = .useProtocolCachePolicy
         default: return nil
         }
     }
@@ -32,7 +30,6 @@ public enum NetworkingCachePolicy: String, Decodable, RawRepresentable {
         case .returnCacheDataElseLoad: .returnCacheDataElseLoad
         case .returnCacheDataDontLoad: .returnCacheDataDontLoad
         case .reloadRevalidatingCacheData: .reloadRevalidatingCacheData
-        case .useProtocolCachePolicy: .useProtocolCachePolicy
         }
     }
 }

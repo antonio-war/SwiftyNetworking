@@ -7,9 +7,7 @@
 
 import Foundation
 
-public struct URLRequestSerializer: Sendable {
-    
-    public init() {}
+struct URLRequestSerializer: Sendable {
     
     func serialize(_ request: NetworkingRequest) -> URLRequest {
         var urlRequest = URLRequest(url: url(request), cachePolicy: cachePolicy(request), timeoutInterval: timeoutInterval(request))

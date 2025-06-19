@@ -22,7 +22,7 @@ public struct NetworkingRequest: Sendable, RawRepresentable {
         headers: [String : String] = [:],
         queryParameters: [String: String] = [:],
         body: Data? = nil,
-        cachePolicy: NetworkingCachePolicy = .useProtocolCachePolicy,
+        cachePolicy: NetworkingCachePolicy = .returnCacheDataElseLoad,
         timeout: TimeInterval = 60
     ) {
         self.url = NetworkingRequest.url(url: url)
@@ -35,14 +35,14 @@ public struct NetworkingRequest: Sendable, RawRepresentable {
     }
         
     public init?(rawValue: URLRequest) {
-        guard let builder = NetworkingRequestBuilder(rawValue) else { return nil }
-        self.url = builder.url()
-        self.method = builder.method()
-        self.headers = builder.headers()
-        self.queryParameters = builder.queryParameters()
-        self.body = builder.body()
-        self.cachePolicy = builder.cachePolicy()
-        self.timeout = builder.timeout()
+        guard let request = deserializer.deserialize(rawValue) else { return nil }
+        self.url = request.url
+        self.method = request.method
+        self.headers = request.headers
+        self.queryParameters = request.queryParameters
+        self.body = request.body
+        self.cachePolicy = request.cachePolicy
+        self.timeout = request.timeout
     }
     
     public var rawValue: URLRequest {
