@@ -45,4 +45,44 @@ struct UrlRequestDeserializerTests {
         request.httpMethod = "UNKNOWN"
         #expect(deserializer.method(request) == nil)
     }
+    
+    @Test
+    func headersWhenRawValueIsNotEmptyThenItShouldReturnNotEmptyDictionary() async throws {
+        let url = try #require(URL(string: "www.example.com"))
+        var request = URLRequest(url: url)
+        request.allHTTPHeaderFields = ["key": "value"]
+        #expect(!deserializer.headers(request).isEmpty)
+    }
+    
+    @Test
+    func headersWhenRawValueIsEmptyThenItShouldReturnEmptyDictionary() async throws {
+        let url = try #require(URL(string: "www.example.com"))
+        var request = URLRequest(url: url)
+        request.allHTTPHeaderFields = [:]
+        #expect(deserializer.headers(request).isEmpty)
+    }
+    
+    @Test
+    func headersWhenRawValueIsNilThenItShouldReturnEmptyDictionary() async throws {
+        let url = try #require(URL(string: "www.example.com"))
+        var request = URLRequest(url: url)
+        request.allHTTPHeaderFields = nil
+        #expect(deserializer.headers(request).isEmpty)
+    }
+    
+    @Test
+    func queryParametersWhenRawValueIsNotEmptyThenItShouldReturnNotEmptyDictionary() async throws {
+        let url = try #require(URL(string: "www.example.com?key=value"))
+        let request = URLRequest(url: url)
+        let queryParameters = try #require(deserializer.queryParameters(request))
+        #expect(!queryParameters.isEmpty)
+    }
+    
+    @Test
+    func queryParametersWhenRawValueIsEmptyThenItShouldReturnEmptyDictionary() async throws {
+        let url = try #require(URL(string: "www.example.com"))
+        let request = URLRequest(url: url)
+        let queryParameters = try #require(deserializer.queryParameters(request))
+        #expect(queryParameters.isEmpty)
+    }
 }
