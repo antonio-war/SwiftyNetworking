@@ -85,4 +85,25 @@ struct UrlRequestDeserializerTests {
         let queryParameters = try #require(deserializer.queryParameters(request))
         #expect(queryParameters.isEmpty)
     }
+    
+    @Test
+    func queryParametersWhenRawValueUrlIsNilThenItShouldReturnNil() async throws {
+        let url = try #require(URL(string: "www.example.com"))
+        var request = URLRequest(url: url)
+        request.url = nil
+        #expect(deserializer.queryParameters(request) == nil)
+    }
+    
+    @Test
+    func queryParametersWhenSomeQueryItemsHaveNilValueThenItShouldIgnoreThem() async throws {
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "example.com"
+        components.queryItems = [ URLQueryItem(name: "key2", value: nil) ]
+        let url = try #require(components.url)
+        let request = URLRequest(url: url)
+        let queryParameters = try #require(deserializer.queryParameters(request))
+        #expect(queryParameters.isEmpty)
+    }
+
 }
