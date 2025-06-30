@@ -38,6 +38,7 @@ public struct NetworkingResponse: Sendable, RawRepresentable {
         self.headers = response.headers
         self.body = response.body
         self.contentLenght = response.contentLenght
+        self.mimeType = response.mimeType
     }
     
     public var rawValue: (data: Data, urlResponse: URLResponse) {
