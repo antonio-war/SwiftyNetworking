@@ -12,17 +12,20 @@ public struct NetworkingResponse: Sendable, RawRepresentable {
     public let code: Int
     public let headers: [String: String]
     public let body: Data
+    public let contentLenght: Int
     
     public init(
         url: URL,
         code: Int,
         headers: [String: String],
-        body: Data
+        body: Data,
+        contentLenght: Int
     ) {
         self.url = url
         self.code = code
         self.headers = headers
         self.body = body
+        self.contentLenght = contentLenght
     }
     
     public init?(rawValue: (data: Data, urlResponse: URLResponse)) {
@@ -31,6 +34,7 @@ public struct NetworkingResponse: Sendable, RawRepresentable {
         self.code = response.code
         self.headers = response.headers
         self.body = response.body
+        self.contentLenght = response.contentLenght
     }
     
     public var rawValue: (data: Data, urlResponse: URLResponse) {

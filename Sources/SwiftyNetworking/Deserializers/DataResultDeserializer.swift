@@ -16,7 +16,8 @@ struct DataResultDeserializer: Sendable {
             url: url,
             code: code,
             headers: headers(result),
-            body: body(result)
+            body: body(result),
+            contentLenght: contentLenght(result)
         )
     }
     
@@ -41,5 +42,9 @@ struct DataResultDeserializer: Sendable {
     
     func body(_ result: (data: Data, urlResponse: URLResponse)) -> Data {
         return result.data
+    }
+    
+    func contentLenght(_ result: (data: Data, urlResponse: URLResponse)) -> Int {
+        return Int(result.urlResponse.expectedContentLength)
     }
 }

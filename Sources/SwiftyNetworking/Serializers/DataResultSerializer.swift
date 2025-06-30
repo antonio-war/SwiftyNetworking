@@ -21,7 +21,7 @@ struct DataResultSerializer: Sendable {
         if let urlResponse = HTTPURLResponse(url: response.url, statusCode: response.code, httpVersion: nil, headerFields: response.headers) {
             return urlResponse
         } else {
-            return URLResponse(url: response.url, mimeType: nil, expectedContentLength: 0, textEncodingName: nil)
+            return URLResponse(url: response.url, mimeType: nil, expectedContentLength: response.contentLenght, textEncodingName: nil)
         }
     }
 }
