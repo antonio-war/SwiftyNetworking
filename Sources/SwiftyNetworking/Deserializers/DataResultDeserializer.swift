@@ -17,7 +17,8 @@ struct DataResultDeserializer: Sendable {
             code: code,
             headers: headers(result),
             body: body(result),
-            contentLenght: contentLenght(result)
+            contentLenght: contentLenght(result),
+            mimeType: mimeType(result)
         )
     }
     
@@ -46,5 +47,10 @@ struct DataResultDeserializer: Sendable {
     
     func contentLenght(_ result: (data: Data, urlResponse: URLResponse)) -> Int {
         return Int(result.urlResponse.expectedContentLength)
+    }
+    
+    func mimeType(_ result: (data: Data, urlResponse: URLResponse)) -> NetworkingMimeType? {
+        guard let rawValue = result.urlResponse.mimeType else { return nil }
+        return NetworkingMimeType(rawValue: rawValue.uppercased())
     }
 }

@@ -13,19 +13,22 @@ public struct NetworkingResponse: Sendable, RawRepresentable {
     public let headers: [String: String]
     public let body: Data
     public let contentLenght: Int
+    public let mimeType: NetworkingMimeType?
     
     public init(
         url: URL,
         code: Int,
         headers: [String: String],
         body: Data,
-        contentLenght: Int
+        contentLenght: Int,
+        mimeType: NetworkingMimeType?
     ) {
         self.url = url
         self.code = code
         self.headers = headers
         self.body = body
         self.contentLenght = contentLenght
+        self.mimeType = mimeType
     }
     
     public init?(rawValue: (data: Data, urlResponse: URLResponse)) {
