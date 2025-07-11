@@ -33,7 +33,7 @@ struct URLSessionTaskResultSerializer: Sendable {
         HTTPURLResponse(
             url: response.url,
             statusCode: response.code,
-            httpVersion: response.metric?.protocol?.rawValue.lowercased(),
+            httpVersion: response.metric?.standard?.rawValue.lowercased(),
             headerFields: response.headers
         )
     }

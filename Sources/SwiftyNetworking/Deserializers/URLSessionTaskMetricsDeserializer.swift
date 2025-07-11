@@ -16,7 +16,7 @@ struct URLSessionTaskMetricsDeserializer: Sendable {
             duration: duration(metrics),
             redirections: redirections(metrics),
             source: source(metrics),
-            protocol: `protocol`(metrics)
+            standard: standard(metrics)
         )
     }
     
@@ -40,8 +40,8 @@ struct URLSessionTaskMetricsDeserializer: Sendable {
         metrics.transactionMetrics.contains(where: { $0.resourceFetchType == .localCache }) ? .cache : .network
     }
     
-    func `protocol`(_ metrics: URLSessionTaskMetrics) -> NetworkingProtocol? {
+    func standard(_ metrics: URLSessionTaskMetrics) -> NetworkingStandard? {
         guard let rawValue = metrics.transactionMetrics.last?.networkProtocolName?.uppercased() else { return nil }
-        return NetworkingProtocol(rawValue: rawValue)
+        return NetworkingStandard(rawValue: rawValue)
     }
 }
