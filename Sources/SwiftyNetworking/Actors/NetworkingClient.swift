@@ -27,4 +27,8 @@ public actor NetworkingClient: Sendable {
             throw NetworkingError.unexpected(error)
         }
     }
+    
+    public static let shared: NetworkingClient = {
+        return NetworkingClient(configuration: .default, delegate: .default, queue: .default)
+    }()
 }

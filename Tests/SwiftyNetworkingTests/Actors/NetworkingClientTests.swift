@@ -11,7 +11,7 @@ import Testing
 
 @Suite
 struct NetworkingClientTests {
-    private let client: NetworkingClient = NetworkingClient()
+    private let client: NetworkingClient = .shared
     
     @Test func sendWhenMethodIsDeleteThenResponseStatusShouldBeSuccess() async throws {
         let url = try #require(URL(string: "https://www.httpbin.org/delete"))
