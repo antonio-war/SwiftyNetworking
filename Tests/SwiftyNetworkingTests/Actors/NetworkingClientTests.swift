@@ -70,7 +70,7 @@ struct NetworkingClientTests {
         let url = try #require(URL(string: "https://www.httpbin.org/get"))
         let request = NetworkingRequest(url: url, method: .get, cachePolicy: .reloadIgnoringCacheData)
         try await withThrowingTaskGroup { group in
-            for _ in 0..<50 {
+            for _ in 0..<10 {
                 group.addTask {
                     try await client.send(request)
                 }

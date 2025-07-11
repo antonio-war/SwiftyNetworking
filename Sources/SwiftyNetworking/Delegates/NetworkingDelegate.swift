@@ -21,7 +21,7 @@ public final class NetworkingDelegate: NSObject, URLSessionTaskDelegate, @unchec
     
     public func metric(for request: NetworkingRequest) -> NetworkingMetric? {
         guard let metrics = cache.object(forKey: NSNumber(value: request.rawValue.hashValue)) else { return nil }
-        return NetworkingMetric(start: .init(), end: .init(), redirections: 1)
+        return NetworkingMetric(rawValue: metrics)
     }
         
     public static let `default`: NetworkingDelegate = {
