@@ -18,7 +18,8 @@ struct URLSessionTaskResultDeserializer: Sendable {
             headers: headers(result),
             body: body(result),
             contentLenght: contentLenght(result),
-            mimeType: mimeType(result)
+            mimeType: mimeType(result),
+            encoding: encoding(result)
         )
     }
     
@@ -50,7 +51,12 @@ struct URLSessionTaskResultDeserializer: Sendable {
     }
     
     func mimeType(_ result: URLSessionTaskResult) -> NetworkingMimeType? {
-        guard let rawValue = result.urlResponse.mimeType else { return nil }
-        return NetworkingMimeType(rawValue: rawValue.uppercased())
+        guard let rawValue = result.urlResponse.mimeType?.uppercased() else { return nil }
+        return NetworkingMimeType(rawValue: rawValue)
+    }
+    
+    func encoding(_ result: URLSessionTaskResult) -> NetworkingEncoding? {
+        guard let rawValue = result.urlResponse.textEncodingName?.uppercased() else { return nil }
+        return NetworkingEncoding(rawValue: rawValue)
     }
 }

@@ -14,6 +14,7 @@ public struct NetworkingResponse: Sendable, RawRepresentable {
     public let body: Data
     public let contentLenght: Int
     public let mimeType: NetworkingMimeType?
+    public let encoding: NetworkingEncoding?
     public internal(set) var metric: NetworkingMetric?
     
     public init(
@@ -22,7 +23,8 @@ public struct NetworkingResponse: Sendable, RawRepresentable {
         headers: [String: String],
         body: Data,
         contentLenght: Int,
-        mimeType: NetworkingMimeType?
+        mimeType: NetworkingMimeType?,
+        encoding: NetworkingEncoding?
     ) {
         self.url = url
         self.code = code
@@ -30,6 +32,7 @@ public struct NetworkingResponse: Sendable, RawRepresentable {
         self.body = body
         self.contentLenght = contentLenght
         self.mimeType = mimeType
+        self.encoding = encoding
     }
     
     public init?(rawValue: (data: Data, urlResponse: URLResponse)) {
@@ -40,6 +43,7 @@ public struct NetworkingResponse: Sendable, RawRepresentable {
         self.body = response.body
         self.contentLenght = response.contentLenght
         self.mimeType = response.mimeType
+        self.encoding = response.encoding
     }
     
     public var rawValue: (data: Data, urlResponse: URLResponse) {

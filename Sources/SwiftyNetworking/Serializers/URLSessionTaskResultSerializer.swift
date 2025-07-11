@@ -18,15 +18,23 @@ struct URLSessionTaskResultSerializer: Sendable {
     }
     
     func urlResponse(_ response: NetworkingResponse) -> URLResponse {
-        if let urlResponse = HTTPURLResponse(url: response.url, statusCode: response.code, httpVersion: nil, headerFields: response.headers) {
-            return urlResponse
-        } else {
+        guard let httpUrlResponse = httpUrlResponse(response) else {
             return URLResponse(
                 url: response.url,
-                mimeType: response.mimeType?.rawValue,
+                mimeType: response.mimeType?.rawValue.lowercased(),
                 expectedContentLength: response.contentLenght,
-                textEncodingName: nil
+                textEncodingName: response.encoding?.rawValue.lowercased()
             )
         }
+        return httpUrlResponse
+    }
+    
+    func httpUrlResponse(_ response: NetworkingResponse) -> HTTPURLResponse? {
+        HTTPURLResponse(
+            url: response.url,
+            statusCode: response.code,
+            httpVersion: response.metric?.protocol?.rawValue.lowercased(),
+            headerFields: response.headers
+        )
     }
 }
