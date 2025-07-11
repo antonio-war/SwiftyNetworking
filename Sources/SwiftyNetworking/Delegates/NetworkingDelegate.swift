@@ -15,13 +15,15 @@ public final class NetworkingDelegate: NSObject, URLSessionTaskDelegate, @unchec
     }
     
     public func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
-        self.cache.setObject(metrics, forKey: task.taskIdentifier as NSNumber)
+        guard let request = metrics.transactionMetrics.first?.request else { return }
+        self.cache.setObject(metrics, forKey: NSNumber(value: request.hashValue))
     }
     
-    public func metric(for identifier: Int) -> NetworkingMetric {
+    public func metric(for request: NetworkingRequest) -> NetworkingMetric? {
+        guard let metrics = cache.object(forKey: NSNumber(value: request.rawValue.hashValue)) else { return nil }
         return NetworkingMetric(start: .init(), end: .init(), redirections: 1)
     }
-    
+        
     public static let `default`: NetworkingDelegate = {
         let cache: NSCache<NSNumber, URLSessionTaskMetrics> = NSCache()
         return NetworkingDelegate(cache: cache)
