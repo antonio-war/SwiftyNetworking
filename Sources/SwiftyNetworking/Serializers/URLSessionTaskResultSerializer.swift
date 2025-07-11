@@ -1,5 +1,5 @@
 //
-//  DataResultSerializer.swift
+//  URLSessionTaskResultSerializer.swift
 //  SwiftyNetworking
 //
 //  Created by Antonio Guerra on 30/06/25.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct DataResultSerializer: Sendable {
+struct URLSessionTaskResultSerializer: Sendable {
     
-    func serialize(_ response: NetworkingResponse) -> (data: Data, urlResponse: URLResponse) {
+    func serialize(_ response: NetworkingResponse) -> URLSessionTaskResult {
         return (data: data(response), urlResponse: urlResponse(response))
     }
     

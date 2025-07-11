@@ -57,6 +57,6 @@ public struct NetworkingResponse: Sendable, RawRepresentable {
         }
     }
     
-    private let serializer: DataResultSerializer = DataResultSerializer()
-    private let deserializer: DataResultDeserializer = DataResultDeserializer()
+    private let serializer: URLSessionTaskResultSerializer = URLSessionTaskResultSerializer()
+    private let deserializer: URLSessionTaskResultDeserializer = URLSessionTaskResultDeserializer()
 }

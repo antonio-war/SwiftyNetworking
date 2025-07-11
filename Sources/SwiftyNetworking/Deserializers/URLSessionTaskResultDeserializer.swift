@@ -1,5 +1,5 @@
 //
-//  DataResultDeserializer.swift
+//  URLSessionTaskResultDeserializer.swift
 //  SwiftyNetworking
 //
 //  Created by Antonio Guerra on 30/06/25.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct DataResultDeserializer: Sendable {
+struct URLSessionTaskResultDeserializer: Sendable {
     
-    func deserialize(_ result: (data: Data, urlResponse: URLResponse)) -> NetworkingResponse? {
+    func deserialize(_ result: URLSessionTaskResult) -> NetworkingResponse? {
         guard let url = url(result) else { return nil }
         guard let code = code(result) else { return nil }
         return NetworkingResponse(
@@ -22,17 +22,17 @@ struct DataResultDeserializer: Sendable {
         )
     }
     
-    func url(_ result: (data: Data, urlResponse: URLResponse)) -> URL? {
+    func url(_ result: URLSessionTaskResult) -> URL? {
         guard let response = result.urlResponse as? HTTPURLResponse else { return nil }
         return response.url
     }
     
-    func code(_ result: (data: Data, urlResponse: URLResponse)) -> Int? {
+    func code(_ result: URLSessionTaskResult) -> Int? {
         guard let response = result.urlResponse as? HTTPURLResponse else { return nil }
         return response.statusCode
     }
     
-    func headers(_ result: (data: Data, urlResponse: URLResponse)) -> [String: String] {
+    func headers(_ result: URLSessionTaskResult) -> [String: String] {
         guard let response = result.urlResponse as? HTTPURLResponse else { return [:] }
         return response.allHeaderFields.reduce(into: [String: String]()) { dict, pair in
             if let key = pair.key as? String, let value = pair.value as? String {
@@ -41,15 +41,15 @@ struct DataResultDeserializer: Sendable {
         }
     }
     
-    func body(_ result: (data: Data, urlResponse: URLResponse)) -> Data {
+    func body(_ result: URLSessionTaskResult) -> Data {
         return result.data
     }
     
-    func contentLenght(_ result: (data: Data, urlResponse: URLResponse)) -> Int {
+    func contentLenght(_ result: URLSessionTaskResult) -> Int {
         return Int(result.urlResponse.expectedContentLength)
     }
     
-    func mimeType(_ result: (data: Data, urlResponse: URLResponse)) -> NetworkingMimeType? {
+    func mimeType(_ result: URLSessionTaskResult) -> NetworkingMimeType? {
         guard let rawValue = result.urlResponse.mimeType else { return nil }
         return NetworkingMimeType(rawValue: rawValue.uppercased())
     }
