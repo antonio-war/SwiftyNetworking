@@ -61,6 +61,10 @@ public struct NetworkingRequest: Sendable, RawRepresentable {
         return serializer.serialize(self)
     }
     
+    public var secure: Bool {
+        return url.scheme?.uppercased() == "HTTPS"
+    }
+    
     private let serializer: URLRequestSerializer = URLRequestSerializer()
     private let deserializer: URLRequestDeserializer = URLRequestDeserializer()
 }
