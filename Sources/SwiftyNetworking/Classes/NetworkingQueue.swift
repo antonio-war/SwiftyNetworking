@@ -11,7 +11,6 @@ public final class NetworkingQueue: OperationQueue, @unchecked Sendable {
     
     public static let `default`: NetworkingQueue = {
         let queue = NetworkingQueue()
-        queue.maxConcurrentOperationCount = 20
         queue.qualityOfService = .utility
         return queue
     }()

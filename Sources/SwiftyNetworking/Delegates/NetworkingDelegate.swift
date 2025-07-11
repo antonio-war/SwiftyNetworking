@@ -24,8 +24,6 @@ public final class NetworkingDelegate: NSObject, URLSessionTaskDelegate, @unchec
     
     public static let `default`: NetworkingDelegate = {
         let cache: NSCache<NSNumber, URLSessionTaskMetrics> = NSCache()
-        cache.countLimit = 20
-        cache.evictsObjectsWithDiscardedContent = true
         return NetworkingDelegate(cache: cache)
     }()
 }
