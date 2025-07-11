@@ -14,7 +14,8 @@ struct URLSessionTaskMetricsDeserializer: Sendable {
             start: start(metrics),
             end: end(metrics),
             duration: duration(metrics),
-            redirections: redirections(metrics)
+            redirections: redirections(metrics),
+            source: source(metrics)
         )
     }
     
@@ -32,5 +33,9 @@ struct URLSessionTaskMetricsDeserializer: Sendable {
     
     func redirections(_ metrics: URLSessionTaskMetrics) -> Int {
         metrics.redirectCount
+    }
+    
+    func source(_ metrics: URLSessionTaskMetrics) -> NetworkingSource {
+        metrics.transactionMetrics.contains(where: { $0.resourceFetchType == .localCache }) ? .cache : .network
     }
 }

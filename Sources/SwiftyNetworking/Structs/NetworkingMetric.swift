@@ -12,17 +12,20 @@ public struct NetworkingMetric: Sendable {
     public let end: Date
     public let duration: TimeInterval
     public let redirections: Int
+    public let source: NetworkingSource
     
     public init(
         start: Date,
         end: Date,
         duration: TimeInterval,
-        redirections: Int
+        redirections: Int,
+        source: NetworkingSource
     ) {
         self.start = start
         self.end = end
         self.duration = duration
         self.redirections = redirections
+        self.source = source
     }
     
     public init?(rawValue: URLSessionTaskMetrics) {
@@ -31,6 +34,7 @@ public struct NetworkingMetric: Sendable {
         self.end = metric.end
         self.duration = metric.duration
         self.redirections = metric.redirections
+        self.source = metric.source
     }
     
     private let deserializer: URLSessionTaskMetricsDeserializer = URLSessionTaskMetricsDeserializer()
