@@ -14,6 +14,7 @@ public struct NetworkingResponse: Sendable, RawRepresentable {
     public let body: Data
     public let contentLenght: Int
     public let mimeType: NetworkingMimeType?
+    public internal(set) var metric: NetworkingMetric?
     
     public init(
         url: URL,

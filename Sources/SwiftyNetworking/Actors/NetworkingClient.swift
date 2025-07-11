@@ -9,9 +9,11 @@ import Foundation
 
 public actor NetworkingClient: Sendable {
     private let session: URLSession
+    private let delegate: NetworkingDelegate
     
     public init(configuration: URLSessionConfiguration = .default, delegate: NetworkingDelegate = .default, queue: NetworkingQueue = .default) {
         self.session = URLSession(configuration: configuration, delegate: delegate, delegateQueue: queue)
+        self.delegate = delegate
     }
     
     func send(_ request: NetworkingRequest) async throws(NetworkingError) -> NetworkingResponse {

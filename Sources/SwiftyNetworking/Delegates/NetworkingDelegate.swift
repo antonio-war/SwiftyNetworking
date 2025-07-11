@@ -18,6 +18,10 @@ public final class NetworkingDelegate: NSObject, URLSessionTaskDelegate, @unchec
         self.cache.setObject(metrics, forKey: task.taskIdentifier as NSNumber)
     }
     
+    public func metric(for identifier: Int) -> NetworkingMetric {
+        return NetworkingMetric(start: .init(), end: .init(), redirections: 1)
+    }
+    
     public static let `default`: NetworkingDelegate = {
         let cache: NSCache<NSNumber, URLSessionTaskMetrics> = NSCache()
         cache.countLimit = 20
