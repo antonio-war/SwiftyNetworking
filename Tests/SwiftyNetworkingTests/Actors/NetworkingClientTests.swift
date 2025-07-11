@@ -36,7 +36,7 @@ struct NetworkingClientTests {
     }
     
     @Test func sendWhenMethodIsGetAndParametersAreNotEmptyThenResponseStatusShouldBeSuccess() async throws {
-        let url = try #require(URL(string: "https://jsonplaceholder.typicode.com/comments"))
+        let url = try #require(URL(string: "https://www.httpbin.org/get"))
         let request = NetworkingRequest(
             url: url,
             method: .get,
