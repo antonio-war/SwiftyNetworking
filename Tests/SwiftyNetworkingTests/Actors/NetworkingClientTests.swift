@@ -23,6 +23,7 @@ struct NetworkingClientTests {
         #expect(!response.body.isEmpty)
         #expect(!response.headers.isEmpty)
         #expect(response.metric?.source == .network)
+        #expect(response.metric?.protocol == .http2)
     }
     
     @Test func sendWhenMethodIsGetThenResponseStatusShouldBeSuccess() async throws {
@@ -35,6 +36,7 @@ struct NetworkingClientTests {
         #expect(!response.body.isEmpty)
         #expect(!response.headers.isEmpty)
         #expect(response.metric?.source == .network)
+        #expect(response.metric?.protocol == .http2)
     }
     
     @Test func sendWhenMethodIsGetAndParametersAreNotEmptyThenResponseStatusShouldBeSuccess() async throws {
@@ -52,6 +54,7 @@ struct NetworkingClientTests {
         #expect(!response.body.isEmpty)
         #expect(!response.headers.isEmpty)
         #expect(response.metric?.source == .network)
+        #expect(response.metric?.protocol == .http2)
     }
     
     @Test func sendWhenMethodIsGetAndStatusIsRedirectionThenResponseStatusShouldBeSuccess() async throws {
@@ -68,6 +71,7 @@ struct NetworkingClientTests {
         #expect(response.body.isEmpty)
         #expect(!response.headers.isEmpty)
         #expect(response.metric?.source == .network)
+        #expect(response.metric?.protocol == .http2)
     }
     
     @Test func sendWhenMethodIsGetAndRequestsAreParallelThenResponsesShouldBeSuccessful() async throws {
@@ -86,6 +90,7 @@ struct NetworkingClientTests {
                 #expect(!response.body.isEmpty)
                 #expect(!response.headers.isEmpty)
                 #expect(response.metric?.source == .network)
+                #expect(response.metric?.protocol == .http2)
             }
         }
     }
@@ -101,5 +106,6 @@ struct NetworkingClientTests {
         #expect(!response.body.isEmpty)
         #expect(!response.headers.isEmpty)
         #expect(response.metric?.source == .cache)
+        #expect(response.metric?.protocol == nil)
     }
 }
