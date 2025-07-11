@@ -22,6 +22,7 @@ struct NetworkingClientTests {
         #expect(response.mimeType == .json)
         #expect(!response.body.isEmpty)
         #expect(!response.headers.isEmpty)
+        #expect(response.metric?.source == .network)
     }
     
     @Test func sendWhenMethodIsGetThenResponseStatusShouldBeSuccess() async throws {
@@ -33,6 +34,7 @@ struct NetworkingClientTests {
         #expect(response.mimeType == .json)
         #expect(!response.body.isEmpty)
         #expect(!response.headers.isEmpty)
+        #expect(response.metric?.source == .network)
     }
     
     @Test func sendWhenMethodIsGetAndParametersAreNotEmptyThenResponseStatusShouldBeSuccess() async throws {
@@ -49,6 +51,7 @@ struct NetworkingClientTests {
         #expect(response.mimeType == .json)
         #expect(!response.body.isEmpty)
         #expect(!response.headers.isEmpty)
+        #expect(response.metric?.source == .network)
     }
     
     @Test func sendWhenMethodIsGetAndStatusIsRedirectionThenResponseStatusShouldBeSuccess() async throws {
@@ -64,6 +67,7 @@ struct NetworkingClientTests {
         #expect(response.mimeType == .html)
         #expect(response.body.isEmpty)
         #expect(!response.headers.isEmpty)
+        #expect(response.metric?.source == .network)
     }
     
     @Test func sendWhenMethodIsGetAndRequestsAreParallelThenResponsesShouldBeSuccessful() async throws {
@@ -81,7 +85,21 @@ struct NetworkingClientTests {
                 #expect(response.mimeType == .json)
                 #expect(!response.body.isEmpty)
                 #expect(!response.headers.isEmpty)
+                #expect(response.metric?.source == .network)
             }
         }
+    }
+    
+    @Test func sendWhenMethodIsGetAndCacheIsEnabledThenResponseShouldBeCached() async throws {
+        let url = try #require(URL(string: "https://www.httpbin.org/get"))
+        let request = NetworkingRequest(url: url, method: .get, cachePolicy: .returnCacheDataElseLoad)
+        let _ = try await client.send(request)
+        let response = try await client.send(request)
+        #expect(response.code == 200)
+        #expect(response.status == .success)
+        #expect(response.mimeType == .json)
+        #expect(!response.body.isEmpty)
+        #expect(!response.headers.isEmpty)
+        #expect(response.metric?.source == .cache)
     }
 }
