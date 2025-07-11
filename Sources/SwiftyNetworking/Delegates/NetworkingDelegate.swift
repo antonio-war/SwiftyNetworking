@@ -7,10 +7,21 @@
 
 import Foundation
 
-final class NetworkingDelegate: NSObject, URLSessionTaskDelegate {
-    func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
-        for metric in metrics.transactionMetrics {
-            print(metric.resourceFetchType)
-        }
+public final class NetworkingDelegate: NSObject, URLSessionTaskDelegate, @unchecked Sendable {
+    private let cache: NSCache<NSNumber, URLSessionTaskMetrics>
+    
+    public init(cache: NSCache<NSNumber, URLSessionTaskMetrics> = NSCache()) {
+        self.cache = cache
     }
+    
+    public func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
+        self.cache.setObject(metrics, forKey: task.taskIdentifier as NSNumber)
+    }
+    
+    public static let `default`: NetworkingDelegate = {
+        let cache: NSCache<NSNumber, URLSessionTaskMetrics> = NSCache()
+        cache.countLimit = 20
+        cache.evictsObjectsWithDiscardedContent = true
+        return NetworkingDelegate(cache: cache)
+    }()
 }

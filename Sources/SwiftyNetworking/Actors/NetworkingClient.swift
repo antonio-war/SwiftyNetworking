@@ -10,7 +10,7 @@ import Foundation
 public actor NetworkingClient: Sendable {
     private let session: URLSession
     
-    public init(configuration: URLSessionConfiguration = .default, queue: NetworkingQueue = .default) {
+    public init(configuration: URLSessionConfiguration = .default, delegate: NetworkingDelegate = .default, queue: NetworkingQueue = .default) {
         self.session = URLSession(configuration: configuration, delegate: delegate, delegateQueue: queue)
     }
     
@@ -25,6 +25,4 @@ public actor NetworkingClient: Sendable {
             throw NetworkingError.unexpected(error)
         }
     }
-    
-    private let delegate: NetworkingDelegate = NetworkingDelegate()
 }

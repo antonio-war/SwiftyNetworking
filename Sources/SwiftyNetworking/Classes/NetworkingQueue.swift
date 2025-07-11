@@ -9,11 +9,10 @@ import Foundation
 
 public final class NetworkingQueue: OperationQueue, @unchecked Sendable {
     
-    override init() {
-        super.init()
-        self.maxConcurrentOperationCount = 1
-        self.qualityOfService = .utility
-    }
-    
-    public static let `default`: NetworkingQueue = NetworkingQueue()
+    public static let `default`: NetworkingQueue = {
+        let queue = NetworkingQueue()
+        queue.maxConcurrentOperationCount = 1
+        queue.qualityOfService = .utility
+        return queue
+    }()
 }
