@@ -22,7 +22,7 @@ struct URLSessionTaskResultSerializer: Sendable {
             return URLResponse(
                 url: response.url,
                 mimeType: response.mimeType?.rawValue.lowercased(),
-                expectedContentLength: response.contentLenght,
+                expectedContentLength: response.contentLength,
                 textEncodingName: response.encoding?.rawValue.lowercased()
             )
         }

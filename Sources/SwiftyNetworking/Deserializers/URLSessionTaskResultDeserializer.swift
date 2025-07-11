@@ -17,7 +17,7 @@ struct URLSessionTaskResultDeserializer: Sendable {
             code: code,
             headers: headers(result),
             body: body(result),
-            contentLenght: contentLenght(result),
+            contentLength: contentLength(result),
             mimeType: mimeType(result),
             encoding: encoding(result)
         )
@@ -46,7 +46,7 @@ struct URLSessionTaskResultDeserializer: Sendable {
         return result.data
     }
     
-    func contentLenght(_ result: URLSessionTaskResult) -> Int {
+    func contentLength(_ result: URLSessionTaskResult) -> Int {
         return Int(result.urlResponse.expectedContentLength)
     }
     

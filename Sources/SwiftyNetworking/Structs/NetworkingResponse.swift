@@ -12,7 +12,7 @@ public struct NetworkingResponse: Sendable, RawRepresentable {
     public let code: Int
     public let headers: [String: String]
     public let body: Data
-    public let contentLenght: Int
+    public let contentLength: Int
     public let mimeType: NetworkingMimeType?
     public let encoding: NetworkingEncoding?
     public internal(set) var metric: NetworkingMetric?
@@ -22,7 +22,7 @@ public struct NetworkingResponse: Sendable, RawRepresentable {
         code: Int,
         headers: [String: String],
         body: Data,
-        contentLenght: Int,
+        contentLength: Int,
         mimeType: NetworkingMimeType?,
         encoding: NetworkingEncoding?
     ) {
@@ -30,7 +30,7 @@ public struct NetworkingResponse: Sendable, RawRepresentable {
         self.code = code
         self.headers = headers
         self.body = body
-        self.contentLenght = contentLenght
+        self.contentLength = contentLength
         self.mimeType = mimeType
         self.encoding = encoding
     }
@@ -41,7 +41,7 @@ public struct NetworkingResponse: Sendable, RawRepresentable {
         self.code = response.code
         self.headers = response.headers
         self.body = response.body
-        self.contentLenght = response.contentLenght
+        self.contentLength = response.contentLength
         self.mimeType = response.mimeType
         self.encoding = response.encoding
     }
