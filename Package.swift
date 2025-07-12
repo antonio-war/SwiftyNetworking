@@ -1,4 +1,4 @@
-// swift-tools-version: 5.8
+// swift-tools-version: 5.10
 
 import PackageDescription
 
@@ -20,7 +20,7 @@ let package = Package(
             name: "SwiftyNetworkingTests",
             dependencies: ["SwiftyNetworking"]),
     ],
-    swiftLanguageVersions: [
+    swiftLanguageModes: [
         .v5,
         .version("6")
     ]
