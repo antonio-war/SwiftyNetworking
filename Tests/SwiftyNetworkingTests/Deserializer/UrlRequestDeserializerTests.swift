@@ -112,4 +112,32 @@ struct UrlRequestDeserializerTests {
         request.httpBody = Data()
         #expect(deserializer.body(request) != nil)
     }
+    
+    @Test
+    func bodyWhenRawValueHttpBodyIsNilThenItShouldReturnNil() async throws {
+        var request = URLRequest(url: try #require(URL(string: "https://example.com")))
+        request.httpBody = nil
+        #expect(deserializer.body(request) == nil)
+    }
+    
+    @Test
+    func cachePolicyWhenRawValueCachePolicyIsHandledThenItShouldReturnNetworkingCachePolicy() async throws {
+        var request = URLRequest(url: try #require(URL(string: "https://example.com")))
+        request.cachePolicy = .useProtocolCachePolicy
+        #expect(deserializer.cachePolicy(request) == .respectProtocolStandard)
+    }
+    
+    @Test
+    func cachePolicyWhenRawValueCachePolicyIsNotHandledThenItShouldReturnNil() async throws {
+        var request = URLRequest(url: try #require(URL(string: "https://example.com")))
+        request.cachePolicy = .reloadIgnoringLocalAndRemoteCacheData
+        #expect(deserializer.cachePolicy(request) == nil)
+    }
+    
+    @Test
+    func timeoutWhenRawValueTimeoutIntervalIsGreaterThanZeroThenItShouldReturnTimeInterval() async throws {
+        var request = URLRequest(url: try #require(URL(string: "https://example.com")))
+        request.timeoutInterval = 1
+        #expect(deserializer.timeout(request) == 1)
+    }
 }
