@@ -1,5 +1,5 @@
 //
-//  UrlRequestDeserializerTests.swift
+//  URLRequestDeserializerTests.swift
 //  SwiftyNetworking
 //
 //  Created by Antonio Guerra on 17/06/25.
@@ -10,7 +10,7 @@ import Foundation
 import Testing
 
 @Suite
-struct UrlRequestDeserializerTests {
+struct URLRequestDeserializerTests {
     private let deserializer: URLRequestDeserializer = URLRequestDeserializer()
     
     @Test

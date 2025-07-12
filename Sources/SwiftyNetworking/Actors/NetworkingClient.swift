@@ -18,6 +18,7 @@ public actor NetworkingClient: Sendable {
     
     func send(_ request: NetworkingRequest) async throws(NetworkingError) -> NetworkingResponse {
         do {
+            guard request.scheme != nil else { throw NetworkingError.invalidRequest }
             let result = try await session.data(for: request.rawValue)
             guard var response = NetworkingResponse(rawValue: result) else { throw NetworkingError.invalidResponse }
             response.metric = delegate.metric(for: request)

@@ -108,4 +108,12 @@ struct NetworkingClientTests {
         #expect(response.metric?.source == .cache)
         #expect(response.metric?.standard == nil)
     }
+    
+    @Test func sendWhenUrlIsNotAnHttpUrlThenInvalidRequestErrorShouldBeThrown() async throws {
+        let url = try #require(URL(string: "ftp://www.httpbin.org/get"))
+        let request = NetworkingRequest(url: url, method: .get, cachePolicy: .reloadIgnoringCacheData)
+        await #expect(throws: NetworkingError.invalidRequest) {
+            try await client.send(request)
+        }
+    }
 }
