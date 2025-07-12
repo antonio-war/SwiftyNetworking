@@ -61,8 +61,9 @@ public struct NetworkingRequest: Sendable, RawRepresentable {
         return serializer.serialize(self)
     }
     
-    public var secure: Bool {
-        return url.scheme?.uppercased() == "HTTPS"
+    public var scheme: NetworkingScheme? {
+        guard let rawValue = url.scheme?.uppercased() else { return nil }
+        return NetworkingScheme(rawValue: rawValue)
     }
     
     private let serializer: URLRequestSerializer = URLRequestSerializer()
