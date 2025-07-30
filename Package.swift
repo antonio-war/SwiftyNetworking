@@ -11,16 +11,19 @@ let package = Package(
     products: [
         .library(
             name: "SwiftyNetworking",
-            targets: ["SwiftyNetworking"]),
+            targets: ["SwiftyNetworking"]
+        ),
     ],
     targets: [
         .target(
-            name: "SwiftyNetworking"),
+            name: "SwiftyNetworking"
+        ),
         .testTarget(
             name: "SwiftyNetworkingTests",
-            dependencies: ["SwiftyNetworking"]),
+            dependencies: ["SwiftyNetworking"]
+        ),
     ],
-    swiftLanguageModes: [
+    swiftLanguageVersions: [
         .v5,
         .version("6")
     ]
