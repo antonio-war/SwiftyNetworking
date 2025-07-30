@@ -20,11 +20,11 @@ public struct NetworkingResponse: Sendable, RawRepresentable {
     public init(
         url: URL,
         code: Int,
-        headers: [String: String],
+        headers: [String: String] = [:],
         body: Data,
         contentLength: Int,
-        mimeType: NetworkingMimeType?,
-        encoding: NetworkingEncoding?
+        mimeType: NetworkingMimeType? = nil,
+        encoding: NetworkingEncoding? = nil
     ) {
         self.url = url
         self.code = code

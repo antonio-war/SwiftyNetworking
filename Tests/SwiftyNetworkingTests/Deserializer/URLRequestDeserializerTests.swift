@@ -24,9 +24,10 @@ struct URLRequestDeserializerTests {
     @Test
     func urlWhenRawValueHasQueryItemsThenItShouldBeDifferentFromInitialUrl() async throws {
         let url = try #require(URL(string: "www.example.com?key=value"))
+        let expectedUrl = try #require(URL(string: "www.example.com"))
         let request = URLRequest(url: url)
         let deserializedUrl = try #require(deserializer.url(request))
-        #expect(deserializedUrl != url)
+        #expect(deserializedUrl == expectedUrl)
     }
     
     @Test
