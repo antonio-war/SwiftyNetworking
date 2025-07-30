@@ -18,6 +18,7 @@ struct URLRequestSerializer: Sendable {
     }
     
     func url(_ request: NetworkingRequest) -> URL {
+        guard !request.queryParameters.isEmpty else { return request.url }
         guard var components = URLComponents(url: request.url, resolvingAgainstBaseURL: false) else { return request.url }
         components.queryItems = request.queryParameters.map { URLQueryItem(name: $0.key, value: $0.value) }
         guard let url = components.url else { return request.url }
