@@ -3,12 +3,12 @@
 
 # Overview
 
-**SwiftyNetworking** is a powerful and easy-to-use networking client written in Swift. 
-It simplifies making network requests and handling responses, allowing you to focus on building your application rather than dealing with the complexities of networking.
-- **Simple**: Designed with simplicity and ease of use in mind, SwiftyNetworking eliminates the need for extensive configuration, making it ready to use right out of the box.
-- **Asynchronous**: Built with modern Swift concurrency, supporting async/await.
-- **Flexible**: Customize requests with different methods, headers, and cache policies.
-- **Inspectable**: SwiftyNetworking collect some network metrics that can be used for in-depth debugging.
+**SwiftyNetworking** is a modern, lightweight networking client written in Swift, built with Swift 6 and strict concurrency in mind.
+It streamlines network communication, allowing you to focus on your app’s logic rather than the intricacies of HTTP.
+- **Simple**: Offers a clean API that works out of the box with minimal setup, focused solely on performing requests and returning responses.
+- **Asynchronous**: Designed from the ground up to leverage async/await, Swift’s structured concurrency model, and Sendable for thread safety.
+- **Flexible**: Easily configure requests with methods, headers, query parameters, and cache policies.
+- **Inspectable**: Collects network metric to help with debugging and performance analysis.
 
 ---
 # Integration
@@ -79,6 +79,10 @@ If successful, the method will return a `NetworkingResponse` which is a simple w
       return String(data: response.body, encoding: .utf8)
    }
 ```
+
+### Notes
+This networking client is intentionally designed without any response body decoding logic. It operates as a low-level, generic component that simply interfaces with the outside world. Its responsibility is limited to making requests and returning raw responses. Decoding and mapping of the response data into models is delegated to a higher-level layer built on top of this client, keeping the architecture modular, testable, and decoupled.
+
 ---
 # Support
 Your generous donations help sustain and improve this project. Here's why supporting us is important:
